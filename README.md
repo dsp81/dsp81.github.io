@@ -12,6 +12,13 @@ styles.css    tokens, layout, the red
 assets/art/   posters and billboards, built from the projects' own outputs
 ```
 
+## Deploying
+
+Run `python bump.py` before committing. It stamps a fresh `?v=` onto the asset URLs —
+GitHub Pages serves everything with `cache-control: max-age=600` and offers no way to
+change that, so without the stamp a browser can keep running the previous build's `app.js`
+against the new build's markup for ten minutes after a push.
+
 ## Editing
 
 Everything a visitor reads lives in `data.js`. A new project is one object in `TITLES` plus
