@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digvijay Singh Parihar — generative models for Earth observation</title>
+<meta name="description" content="Portfolio of Digvijay Singh Parihar: FlowSat (BMVC 2026), reinforcement-learned satellite tile acquisition, Hindi zero-shot speech synthesis, and an interactive guide to diffusion models.">
+<meta name="author" content="Digvijay Singh Parihar">
+<meta property="og:title" content="Digvijay Singh Parihar — generative models for Earth observation">
+<meta property="og:description" content="FlowSat (BMVC 2026), RL-based satellite tile acquisition, Hindi zero-shot TTS, and an interactive diffusion guide.">
+<meta property="og:type" content="profile">
+<meta property="og:image" content="assets/art/hero_flowsat.jpg">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='12' fill='%230b0b0f'/><text x='32' y='47' font-size='44' font-family='Impact,sans-serif' fill='%23e50914' text-anchor='middle'>D</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Profile gate: the site is the same material cut four ways. -->
+<div id="gate" class="gate" hidden>
+  <div class="gate-inner">
+    <p class="gate-title">Who's watching?</p>
+    <ul class="profiles" id="profiles"></ul>
+    <p class="gate-note">Every profile shows the same work, ordered differently. You can switch any time.</p>
+  </div>
+</div>
+
+<header class="nav" id="nav">
+  <div class="nav-left">
+    <a class="wordmark" href="#top" aria-label="Home">DSP<span>FLIX</span></a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#row-featured">Work</a>
+      <a href="#row-publications">Research</a>
+      <a href="#row-skills">Skills</a>
+      <a href="#about">About</a>
+    </nav>
+  </div>
+  <div class="nav-right">
+    <a class="btn-ghost" id="resumeTop" href="#" target="_blank" rel="noopener">Résumé</a>
+    <button class="chip-profile" id="switchProfile" type="button">
+      <span class="avatar" id="navAvatar" aria-hidden="true"></span>
+      <span id="navProfileName">Profile</span>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" id="hero">
+    <div class="hero-art" id="heroArt"></div>
+    <div class="hero-scrim"></div>
+    <div class="hero-body">
+      <p class="hero-kicker" id="heroKicker"></p>
+      <h1 class="hero-title" id="heroTitle"></h1>
+      <p class="hero-meta" id="heroMeta"></p>
+      <p class="hero-logline" id="heroLogline"></p>
+      <div class="hero-actions">
+        <a class="btn-play" id="heroPlay" href="#" target="_blank" rel="noopener">▶ Play</a>
+        <button class="btn-info" id="heroInfo" type="button">ⓘ More info</button>
+      </div>
+    </div>
+  </section>
+
+  <div id="rows" class="rows"></div>
+
+  <section class="about" id="about">
+    <div class="about-grid">
+      <div>
+        <h2>About</h2>
+        <p id="aboutBlurb"></p>
+        <ul class="facts" id="facts"></ul>
+      </div>
+      <aside class="contact-card">
+        <h3>Get in touch</h3>
+        <p class="contact-sub">Open to research collaborations and internships.</p>
+        <ul class="contact-list" id="contact"></ul>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <p id="footName"></p>
+  <p class="foot-note">
+    Built from scratch — no framework, no build step. A Netflix-inspired layout, not affiliated
+    with or endorsed by Netflix. <a href="https://github.com/dsp81" target="_blank" rel="noopener">Source</a>
+  </p>
+</footer>
+
+<!-- Title detail modal -->
+<div class="modal" id="modal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <button class="modal-close" id="modalClose" aria-label="Close">×</button>
+    <div class="modal-art" id="mArt">
+      <div class="modal-art-scrim"></div>
+      <div class="modal-head">
+        <h2 id="mTitle"></h2>
+        <p id="mSub"></p>
+        <div class="modal-actions" id="mActions"></div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-main">
+        <p class="modal-meta" id="mMeta"></p>
+        <p class="modal-synopsis" id="mSynopsis"></p>
+        <div class="stats" id="mStats"></div>
+        <h3 class="modal-h">Episodes</h3>
+        <ol class="episodes" id="mEpisodes"></ol>
+      </div>
+      <div class="modal-side">
+        <h3 class="modal-h">Stack &amp; themes</h3>
+        <ul class="tagcloud" id="mTags"></ul>
+        <h3 class="modal-h">More like this</h3>
+        <div class="related" id="mRelated"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
