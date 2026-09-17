@@ -92,6 +92,9 @@ body.intro-playing{overflow:hidden}
   padding:8px 16px;border-radius:6px;text-decoration:none;font-size:14.5px;cursor:pointer;
   white-space:nowrap}
 .btn-ghost:hover{background:rgba(255,255,255,.12)}
+.icon-link{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:8px;
+  color:var(--ink-3);border:1px solid transparent;transition:color .15s,border-color .15s,background .15s}
+.icon-link:hover{color:var(--ink);background:rgba(255,255,255,.07);border-color:var(--line)}
 .chip-profile{display:flex;align-items:center;gap:9px;background:none;border:0;cursor:pointer;
   color:var(--ink-2);font-size:14.5px}
 .chip-profile:hover{color:var(--ink)}

@@ -346,6 +346,8 @@ function renderStatic() {
     `<li><span>${esc(k)}</span><a href="${href}" target="_blank" rel="noopener">${esc(v)}</a></li>`)
     .join("");
   $("#resumeTop").href = PROFILE.resume;
+  $("#navGithub").href = PROFILE.github;
+  $("#navLinkedin").href = PROFILE.linkedin;
   $("#footName").innerHTML =
     `<b>${esc(PROFILE.name)}</b> · ${esc(PROFILE.tagline)} · ` +
     `<a href="mailto:${PROFILE.email}">${esc(PROFILE.email)}</a>`;
