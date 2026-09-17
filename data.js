@@ -344,6 +344,56 @@ const COURSES = [
   ["Data Structures & Algorithms II", "systems"],
 ];
 
+
+/* ── because you watched ────────────────────────────────────────────────────── */
+/* Three films, and the thing each one taught me about doing the work. Every card opens the
+   project it rhymes with. No poster art — the type and the gradient are the design. */
+const CINEMA = [
+  {
+    film: "The Handmaiden",
+    maker: "Park Chan-wook · 2016",
+    tint: "linear-gradient(140deg,#7a1020,#2a0a12 70%)",
+    reading:
+      "The same events, told a second time from a different vantage point — and the second " +
+      "telling is the one that is true. The first pass was not lying so much as showing you " +
+      "only what it had chosen to show.",
+    lesson: "Read the run twice.",
+    pairs: "flowsat-c",
+    why:
+      "FlowSat-C exists because v1's first telling looked perfect: loss falling, FID falling, " +
+      "CLIP rising — and controllability sitting at zero the whole time. Every diagnostic in " +
+      "the rebuild is there to force the second telling.",
+  },
+  {
+    film: "Millennium Actress",
+    maker: "Satoshi Kon · 2001",
+    tint: "linear-gradient(140deg,#123a63,#0a1626 70%)",
+    reading:
+      "A life assembled out of eras that keep cutting into each other: the same figure, the " +
+      "same chase, restaged across decades until the periods stop being separate things.",
+    lesson: "One place, every era.",
+    pairs: "flowsat",
+    why:
+      "That is the metadata sweep. Fix the scene and the seed, then move the year, the month, " +
+      "the ground sample distance — the same site restaged along an axis, which is exactly the " +
+      "control FlowSat is built to give you.",
+  },
+  {
+    film: "Arrival",
+    maker: "Denis Villeneuve · 2016",
+    tint: "linear-gradient(140deg,#1d5b4c,#08201c 70%)",
+    reading:
+      "Learn an unfamiliar representation and you do not just gain a translation — you gain a " +
+      "different way of perceiving the thing it describes.",
+    lesson: "The notation is the idea.",
+    pairs: "diffusion-guide",
+    why:
+      "The diffusion guide is built on one sentence — every image is a point, and almost no " +
+      "points are images. Accept that representation and the rest of the field stops being a " +
+      "pile of equations and becomes obvious.",
+  },
+];
+
 /* ── off the clock ──────────────────────────────────────────────────────────── */
 const INTERESTS = [
   {
@@ -356,6 +406,7 @@ const INTERESTS = [
       "the 56th and 57th editions — and captained Mighty Mambas to the CCL'25 title.",
     stats: [["CCL'25", "won it, as captain"], ["Inter-IIT", "56th & 57th, quarter-finals"],
             ["New ball", "opening spell"], ["Top order", "with the bat"]],
+    links: [["Record on CricHeroes", "https://chshare.link/player/dF7quJ"]],
   },
   {
     id: "writing",
@@ -397,7 +448,7 @@ const TRACKS = {
       "Published first-author work at BMVC 2026, a shipped LLM automation platform, and three " +
       "projects you can open and poke at right now.",
     traits: ["research", "shipping", "agents"],
-    rows: ["featured", "experience", "skills", "academics", "interests"],
+    rows: ["featured", "experience", "skills", "academics", "interests", "cinema"],
   },
   researcher: {
     label: "Researcher",
@@ -406,7 +457,7 @@ const TRACKS = {
       "Generative models for Earth observation, a reproduction that reports its own negative " +
       "result, and a diffusion guide written to be argued with.",
     traits: ["research", "generative", "evaluation", "remote-sensing"],
-    rows: ["featured", "experience", "skills", "academics", "interests"],
+    rows: ["featured", "experience", "skills", "academics", "interests", "cinema"],
   },
   engineer: {
     label: "Engineer",
@@ -415,7 +466,7 @@ const TRACKS = {
       "Everything here runs: static sites with no build step, reproducible runs, and code you can " +
       "read without a setup guide.",
     traits: ["shipping", "agents", "evaluation"],
-    rows: ["featured", "skills", "experience", "academics", "interests"],
+    rows: ["featured", "skills", "experience", "academics", "interests", "cinema"],
   },
   browsing: {
     label: "Just browsing",
@@ -424,7 +475,7 @@ const TRACKS = {
       "Start with the diffusion guide — it is the one that explains the rest, and it has things " +
       "to drag.",
     traits: ["writing", "generative"],
-    rows: ["featured", "interests", "skills", "experience", "academics"],
+    rows: ["featured", "cinema", "interests", "skills", "experience", "academics"],
   },
 };
 
@@ -435,4 +486,6 @@ const ROWS = {
   skills:     { label: "Top 10 skills today",    kind: "skills" },
   academics:  { label: "Academics & coursework", kind: "academics" },
   interests:  { label: "Off the clock",          kind: "interests" },
+  cinema:     { label: "Because you watched…",   kind: "cinema",
+                note: "Three films, and the thing each one taught me about doing the work. Every card opens the project it rhymes with." },
 };

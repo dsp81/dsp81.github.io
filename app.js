@@ -169,6 +169,33 @@ function addArrows(shell, rail) {
   });
 }
 
+function cinemaRail() {
+  const wrap = el("div", "cinema");
+  CINEMA.forEach(f => {
+    const paired = byId(f.pairs);
+    const c = el("article", "film");
+    c.innerHTML =
+      `<div class="film-plate" style="background:${f.tint}">
+         <p class="film-lesson">${esc(f.lesson)}</p>
+         <h3>${esc(f.film)}</h3>
+         <p class="film-maker">${esc(f.maker)}</p>
+       </div>
+       <div class="film-body">
+         <p class="film-reading">${esc(f.reading)}</p>
+         <p class="film-why">${esc(f.why)}</p>
+       </div>`;
+    if (paired) {
+      const b = el("button", "film-link");
+      b.type = "button";
+      b.innerHTML = `<span>Pairs with</span> <b>${esc(paired.title)}</b> <i aria-hidden="true">→</i>`;
+      b.addEventListener("click", () => openModal(paired.id));
+      c.appendChild(b);
+    }
+    wrap.appendChild(c);
+  });
+  return wrap;
+}
+
 function renderRows(order) {
   const host = $("#rows");
   host.innerHTML = "";
@@ -182,7 +209,7 @@ function renderRows(order) {
     if (def.note) sec.appendChild(el("p", "row-note", esc(def.note)));
 
     const BLOCKS = { skills: skillsRail, experience: experienceRail,
-                     academics: academicsRail, interests: interestsRail };
+                     academics: academicsRail, interests: interestsRail, cinema: cinemaRail };
     if (BLOCKS[def.kind]) {
       const block = BLOCKS[def.kind]();
       if (def.kind === "skills") {

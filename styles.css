@@ -346,3 +346,30 @@ body.intro-playing{overflow:hidden}
   .acad td b{font-size:15px}
   .picker{margin-inline:clamp(12px,3vw,20px);padding:18px}
 }
+
+/* ── because you watched ────────────────────────────────────────────────────── */
+/* Typography and a gradient do the work here: no poster art, nothing borrowed. */
+.cinema{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:16px;
+  padding:0 clamp(16px,4vw,52px)}
+.film{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);
+  border-radius:16px;overflow:hidden;transition:transform .2s ease,border-color .2s ease}
+.film:hover{transform:translateY(-4px);border-color:var(--ink-3)}
+.film-plate{padding:26px 24px 22px;position:relative}
+.film-plate::after{content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 1px,transparent 1px 7px);
+  pointer-events:none}
+.film-lesson{margin:0 0 14px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(255,255,255,.72)}
+.film-plate h3{font-family:var(--display);font-size:clamp(28px,3.2vw,38px);letter-spacing:.02em;
+  line-height:1.02;margin-bottom:8px}
+.film-maker{margin:0;font-size:13.5px;color:rgba(255,255,255,.62)}
+.film-body{padding:20px 24px 6px;display:grid;gap:12px;align-content:start}
+.film-reading{margin:0;color:var(--ink-2);font-size:15px}
+.film-why{margin:0;color:var(--ink-3);font-size:14.5px;padding-left:13px;
+  border-left:2px solid var(--red)}
+.film-link{margin:14px 24px 22px;margin-top:auto;background:none;border:1px solid var(--line);border-radius:8px;
+  padding:10px 14px;text-align:left;cursor:pointer;color:var(--ink-2);font-size:14px;
+  display:flex;align-items:center;gap:7px;transition:border-color .15s,color .15s}
+.film-link:hover{border-color:var(--ink-3);color:var(--ink)}
+.film-link b{color:var(--ink);font-weight:600}
+.film-link i{margin-left:auto;font-style:normal;color:var(--red)}
