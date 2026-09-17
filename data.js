@@ -11,6 +11,8 @@ const PROFILE = {
     "what the numbers actually say afterwards. First-author at BMVC 2026, currently writing a " +
     "master's thesis on controllable foundation models for Earth observation.",
   email: "digvijaysingh.parihar@iitgn.ac.in",
+  phone: "+91 70434 29178",
+  phoneHref: "tel:+917043429178",
   github: "https://github.com/dsp81",
   linkedin: "https://www.linkedin.com/in/digvijay-singh-parihar-b73536259/",
   resume:
@@ -277,16 +279,17 @@ const TRAITS = [
   ["evaluation",      "Evaluation & interpretability"],
   ["writing",         "Writing & teaching"],
   ["shipping",        "Shipped production code"],
+  ["software",        "Software development"],
   ["research",        "Peer-reviewed research"],
 ];
 
 const TRAIT_MAP = {
   "flowsat":         ["generative", "diffusion", "remote-sensing", "research", "evaluation"],
-  "flowsat-c":       ["generative", "diffusion", "remote-sensing", "research", "evaluation"],
-  "povrl":           ["rl", "remote-sensing", "evaluation", "shipping"],
+  "flowsat-c":       ["generative", "diffusion", "remote-sensing", "research", "evaluation", "software"],
+  "povrl":           ["rl", "remote-sensing", "evaluation", "shipping", "software"],
   "yourtts":         ["speech", "generative", "evaluation"],
-  "diffusion-guide": ["writing", "diffusion", "generative", "shipping"],
-  "zelite":          ["agents", "shipping", "evaluation"],
+  "diffusion-guide": ["writing", "diffusion", "generative", "shipping", "software"],
+  "zelite":          ["agents", "shipping", "evaluation", "software"],
 };
 
 /* ── experience ─────────────────────────────────────────────────────────────── */
@@ -465,7 +468,7 @@ const TRACKS = {
     pitch:
       "Everything here runs: static sites with no build step, reproducible runs, and code you can " +
       "read without a setup guide.",
-    traits: ["shipping", "agents", "evaluation"],
+    traits: ["software", "shipping", "agents"],
     rows: ["featured", "skills", "experience", "academics", "interests", "cinema"],
   },
   browsing: {

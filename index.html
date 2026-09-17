@@ -53,6 +53,7 @@
     <a class="icon-link" id="navLinkedin" href="#" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn">
       <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05a3.74 3.74 0 0 1 3.37-1.85c3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
     </a>
+    <button class="btn-ghost" id="tuneBtn" type="button">Tune results</button>
     <a class="btn-ghost" id="resumeTop" href="#" target="_blank" rel="noopener">Résumé</a>
     <button class="chip-profile" id="switchProfile" type="button">
       <span class="avatar" id="navAvatar" aria-hidden="true"></span>
@@ -77,15 +78,6 @@
     </div>
   </section>
 
-  <section class="picker" id="picker" aria-labelledby="pickerTitle">
-    <div class="picker-head">
-      <h2 id="pickerTitle">What are you looking for?</h2>
-      <p id="traitCount"></p>
-    </div>
-    <ul class="traits" id="traitList"></ul>
-    <button class="btn-ghost picker-clear" id="traitClear" type="button" hidden>Clear all</button>
-  </section>
-
   <div id="rows" class="rows"></div>
 
   <section class="about" id="about">
@@ -97,7 +89,7 @@
       </div>
       <aside class="contact-card">
         <h3>Get in touch</h3>
-        <p class="contact-sub">Open to research collaborations and internships.</p>
+        <p class="contact-sub">Open to jobs and internships.</p>
         <ul class="contact-list" id="contact"></ul>
       </aside>
     </div>
@@ -111,6 +103,22 @@
     with or endorsed by Netflix. <a href="https://github.com/dsp81" target="_blank" rel="noopener">Source</a>
   </p>
 </footer>
+
+<!-- What are you looking for: a short questionnaire that reorders the whole page -->
+<div class="quiz" id="quiz" hidden>
+  <div class="quiz-card" role="dialog" aria-modal="true" aria-labelledby="quizTitle">
+    <p class="quiz-kicker">Tailor this page</p>
+    <h2 id="quizTitle">What are you looking for?</h2>
+    <p class="quiz-sub">Pick as many as you like. Everything below gets re-scored and
+       re-ordered around your answers — nothing is hidden.</p>
+    <ul class="traits" id="traitList"></ul>
+    <div class="quiz-actions">
+      <button class="btn-play" id="quizSubmit" type="button">Show me</button>
+      <button class="btn-info" id="quizSkip" type="button">Skip — show everything</button>
+      <span class="quiz-count" id="traitCount"></span>
+    </div>
+  </div>
+</div>
 
 <!-- Title detail modal -->
 <div class="modal" id="modal" hidden>

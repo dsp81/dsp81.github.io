@@ -44,7 +44,7 @@ function buildGate() {
     b.type = "button";
     b.innerHTML = `<span class="profile-avatar">${avatarSVG(key, 58)}</span>
                    <span class="profile-name">${esc(t.label)}</span>`;
-    b.addEventListener("click", () => { setTrack(key, true); closeGate(); });
+    b.addEventListener("click", () => { setTrack(key, true); closeGate(); openQuiz(); });
     li.appendChild(b);
     list.appendChild(li);
   });
@@ -261,6 +261,10 @@ function matchOf(t) {
   return Math.max(41, Math.min(99, Math.round(46 + 50 * share + (t.match - 92) * 0.5)));
 }
 
+/* Answers are staged while the dialog is open and only committed on submit, so the page
+   behind it never reshuffles under the reader mid-question. */
+let staged = new Set();
+
 function buildPicker() {
   const host = $("#traitList");
   if (!host) return;
@@ -271,25 +275,43 @@ function buildPicker() {
     li.innerHTML = `<input type="checkbox" id="${id}" value="${key}">
                     <label for="${id}">${esc(label)}</label>`;
     li.querySelector("input").addEventListener("change", e => {
-      e.target.checked ? picked.add(key) : picked.delete(key);
-      writePicked();
+      e.target.checked ? staged.add(key) : staged.delete(key);
       syncPicker();
-      renderRows(TRACKS[track].rows);
-      const best = bestTitle();
-      if (best) renderHero(best, picked.size ? null : TRACKS[track].pitch);
     });
     host.appendChild(li);
   });
-  syncPicker();
 }
 
 function syncPicker() {
-  $$("#traitList input").forEach(i => { i.checked = picked.has(i.value); });
-  const n = picked.size;
-  $("#traitCount").textContent = n
-    ? `${n} selected · everything below is re-scored and re-ordered`
-    : "Tick anything — the match scores and the running order change with you.";
-  $("#traitClear").hidden = !n;
+  $$("#traitList input").forEach(i => { i.checked = staged.has(i.value); });
+  const n = staged.size;
+  $("#traitCount").textContent = n === 0 ? "Nothing picked yet"
+    : n === 1 ? "1 answer" : `${n} answers`;
+}
+
+function openQuiz() {
+  staged = new Set(picked);
+  syncPicker();
+  $("#quiz").hidden = false;
+  document.body.style.overflow = "hidden";
+  const first = $("#traitList input");
+  if (first) first.focus();
+}
+
+function closeQuiz() {
+  $("#quiz").hidden = true;
+  document.body.style.overflow = "";
+}
+
+function applyQuiz(answers) {
+  picked = new Set(answers);
+  writePicked();
+  closeQuiz();
+  renderRows(TRACKS[track].rows);
+  const top = picked.size ? bestTitle() : byId(TRACKS[track].hero);
+  renderHero(top, picked.size ? null : TRACKS[track].pitch);
+  const rows = $("#rows");
+  if (rows && picked.size) rows.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function bestTitle() {
@@ -366,6 +388,7 @@ function renderStatic() {
     `are <a href="#row-interests">off the clock</a>.`;
   $("#contact").innerHTML = [
     ["Email", PROFILE.email, "mailto:" + PROFILE.email],
+    ["Phone", PROFILE.phone, PROFILE.phoneHref],
     ["GitHub", "@" + PROFILE.handle, PROFILE.github],
     ["LinkedIn", "Digvijay Singh Parihar", PROFILE.linkedin],
     ["Résumé", "PDF, one page", PROFILE.resume],
@@ -434,28 +457,31 @@ const param = new URLSearchParams(location.search).get("p");
 const saved = read();
 // The picker is the landing page: it follows the titles on every session, and is skipped
 // only when a link already says which cut to open.
-let needsGate = !(param && TRACKS[param]) && !location.hash.slice(1);
+const needsGate = !(param && TRACKS[param]) && !location.hash.slice(1);
 if (param && TRACKS[param]) setTrack(param, !picked.size);
 else if (saved && TRACKS[saved]) setTrack(saved);
 else setTrack("recruiter");
 
-playIntro(() => { if (needsGate) openGate(); });
+// Open the picker underneath the title card rather than after it: the intro sits above at
+// z-index 5000, so when it lifts, the picker is already what is there. The page is never
+// revealed and then snatched back.
+if (needsGate) openGate();
+playIntro(() => {});
 
 const deep = location.hash.slice(1);
 if (deep && byId(deep)) { closeGate(); openModal(deep); }
 
 $("#switchProfile").addEventListener("click", openGate);
-const clearBtn = $("#traitClear");
-if (clearBtn) clearBtn.addEventListener("click", () => {
-  picked = new Set(); writePicked(); syncPicker();
-  renderRows(TRACKS[track].rows);
-  renderHero(byId(TRACKS[track].hero), TRACKS[track].pitch);
-});
+$("#tuneBtn").addEventListener("click", openQuiz);
+$("#quizSubmit").addEventListener("click", () => applyQuiz(staged));
+$("#quizSkip").addEventListener("click", () => applyQuiz([]));
+$("#quiz").addEventListener("click", e => { if (e.target.id === "quiz") closeQuiz(); });
 $("#modalClose").addEventListener("click", closeModal);
 $("#modal").addEventListener("click", e => { if (e.target.id === "modal") closeModal(); });
 document.addEventListener("keydown", e => {
   if (e.key !== "Escape") return;
   if (!$("#modal").hidden) closeModal();
+  else if (!$("#quiz").hidden) closeQuiz();
   else if (!$("#gate").hidden && read()) closeGate();
 });
 addEventListener("scroll", () => {
