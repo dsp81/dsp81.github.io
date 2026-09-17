@@ -14,6 +14,12 @@ const el = (tag, cls, html) => {
 };
 const esc = s => String(s).replace(/[&<>"]/g, c =>
   ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const on = (sel, ev, fn, opts) => {
+  const n = typeof sel === "string" ? $(sel) : sel;
+  if (n) n.addEventListener(ev, fn, opts);
+  else console.warn("missing element, skipping listener:", sel);
+  return n;
+};
 
 /* ─────────────────────────── profile ─────────────────────────── */
 const STORE = "dspflix-profile";
@@ -290,6 +296,7 @@ function syncPicker() {
 }
 
 function openQuiz() {
+  if (!$("#quiz")) return;
   staged = new Set(picked);
   syncPicker();
   $("#quiz").hidden = false;
@@ -299,6 +306,7 @@ function openQuiz() {
 }
 
 function closeQuiz() {
+  if (!$("#quiz")) return;
   $("#quiz").hidden = true;
   document.body.style.overflow = "";
 }
@@ -416,6 +424,7 @@ function introShouldPlay() {
 
 function playIntro(done) {
   const wrap = $("#intro"), stage = $("#introStage");
+  if (wrap && !stage) { wrap.remove(); document.body.classList.remove("intro-playing"); done(); return; }
   if (!wrap || !introShouldPlay()) { if (wrap) wrap.remove(); document.body.classList.remove("intro-playing"); done(); return; }
   try { sessionStorage.setItem(INTRO_KEY, "1"); } catch {}
 
@@ -442,7 +451,7 @@ function playIntro(done) {
   };
 
   setTimeout(finish, reduce ? 500 : 1750);
-  $("#introSkip").addEventListener("click", finish);
+  on("#introSkip", "click", finish);
   wrap.addEventListener("click", finish);
   addEventListener("keydown", finish, { once: true });
 }
@@ -471,18 +480,19 @@ playIntro(() => {});
 const deep = location.hash.slice(1);
 if (deep && byId(deep)) { closeGate(); openModal(deep); }
 
-$("#switchProfile").addEventListener("click", openGate);
-$("#tuneBtn").addEventListener("click", openQuiz);
-$("#quizSubmit").addEventListener("click", () => applyQuiz(staged));
-$("#quizSkip").addEventListener("click", () => applyQuiz([]));
-$("#quiz").addEventListener("click", e => { if (e.target.id === "quiz") closeQuiz(); });
-$("#modalClose").addEventListener("click", closeModal);
-$("#modal").addEventListener("click", e => { if (e.target.id === "modal") closeModal(); });
+on("#switchProfile", "click", openGate);
+on("#tuneBtn", "click", openQuiz);
+on("#quizSubmit", "click", () => applyQuiz(staged));
+on("#quizSkip", "click", () => applyQuiz([]));
+on("#quiz", "click", e => { if (e.target.id === "quiz") closeQuiz(); });
+on("#modalClose", "click", closeModal);
+on("#modal", "click", e => { if (e.target.id === "modal") closeModal(); });
 document.addEventListener("keydown", e => {
   if (e.key !== "Escape") return;
-  if (!$("#modal").hidden) closeModal();
-  else if (!$("#quiz").hidden) closeQuiz();
-  else if (!$("#gate").hidden && read()) closeGate();
+  const hidden = sel => { const n = $(sel); return !n || n.hidden; };
+  if (!hidden("#modal")) closeModal();
+  else if (!hidden("#quiz")) closeQuiz();
+  else if (!hidden("#gate") && read()) closeGate();
 });
 addEventListener("scroll", () => {
   $("#nav").classList.toggle("is-solid", scrollY > 40);

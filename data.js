@@ -446,7 +446,7 @@ const FACTS = [
 const TRACKS = {
   recruiter: {
     label: "Recruiter",
-    hero: "flowsat",
+    hero: "flowsat-c",
     pitch:
       "Published first-author work at BMVC 2026, a shipped LLM automation platform, and three " +
       "projects you can open and poke at right now.",
@@ -455,7 +455,7 @@ const TRACKS = {
   },
   researcher: {
     label: "Researcher",
-    hero: "flowsat",
+    hero: "flowsat-c",
     pitch:
       "Generative models for Earth observation, a reproduction that reports its own negative " +
       "result, and a diffusion guide written to be argued with.",
@@ -464,7 +464,7 @@ const TRACKS = {
   },
   engineer: {
     label: "Engineer",
-    hero: "povrl",
+    hero: "flowsat-c",
     pitch:
       "Everything here runs: static sites with no build step, reproducible runs, and code you can " +
       "read without a setup guide.",
@@ -473,7 +473,7 @@ const TRACKS = {
   },
   browsing: {
     label: "Just browsing",
-    hero: "diffusion-guide",
+    hero: "flowsat-c",
     pitch:
       "Start with the diffusion guide — it is the one that explains the rest, and it has things " +
       "to drag.",
