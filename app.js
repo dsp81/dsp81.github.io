@@ -44,7 +44,7 @@ function buildGate() {
     b.type = "button";
     b.innerHTML = `<span class="profile-avatar">${avatarSVG(key, 58)}</span>
                    <span class="profile-name">${esc(t.label)}</span>`;
-    b.addEventListener("click", () => { setTrack(key); closeGate(); });
+    b.addEventListener("click", () => { setTrack(key, true); closeGate(); });
     li.appendChild(b);
     list.appendChild(li);
   });
@@ -53,14 +53,17 @@ const openGate = () => { $("#gate").hidden = false; document.body.style.overflow
 
 const closeGate = () => { $("#gate").hidden = true; document.body.style.overflow = ""; };
 
-function setTrack(key) {
+function setTrack(key, applyTraits) {
   track = TRACKS[key] ? key : "recruiter";
   write(track);
   const t = TRACKS[track];
+  if (applyTraits && t.traits) { picked = new Set(t.traits); writePicked(); }
+  if ($("#traitList")) syncPicker();
   $("#navProfileName").textContent = t.label;
   $("#navAvatar").innerHTML = avatarSVG(track, 26);
-  renderHero(byId(t.hero), t.pitch);
   renderRows(t.rows);
+  const top = picked.size ? bestTitle() : byId(t.hero);
+  renderHero(top || byId(t.hero), picked.size ? null : t.pitch);
 }
 
 /* ─────────────────────────── hero ─────────────────────────── */
@@ -69,7 +72,7 @@ function renderHero(t, pitch) {
   $("#heroKicker").textContent = `${TRACKS[track].label} cut · featured`;
   $("#heroTitle").textContent = t.title;
   $("#heroMeta").innerHTML =
-    `<span class="match">${t.match}% match</span><span>${esc(t.year)}</span>` +
+    `<span class="match">${matchOf(t)}% match</span><span>${esc(t.year)}</span>` +
     `<span class="pill">${esc(t.rating)}</span><span>${esc(t.duration)}</span>`;
   $("#heroLogline").textContent = pitch || t.logline;
   const play = t.links.find(l => l[2] === "play") || t.links[0];
@@ -91,7 +94,7 @@ function card(t) {
      <span class="card-body">
        <span class="card-title">${esc(t.title)}</span>
        <span class="card-sub">${esc(t.sub)}</span>
-       <span class="card-meta"><b>${t.match}% match</b> · ${esc(t.year)} · ${esc(t.rating)}</span>
+       <span class="card-meta"><b>${matchOf(t)}% match</b> · ${esc(t.year)} · ${esc(t.rating)}</span>
      </span>`;
   a.addEventListener("click", () => openModal(t.id));
   return a;
@@ -108,6 +111,64 @@ function skillsRail() {
   return wrap;
 }
 
+function experienceRail() {
+  const wrap = el("div", "stack");
+  EXPERIENCE.forEach(x => {
+    const item = el("article", "xp");
+    item.innerHTML =
+      `<div class="xp-when">${esc(x.when)}</div>
+       <div class="xp-body">
+         <h3>${esc(x.role)}</h3>
+         <p class="xp-org">${esc(x.org)}${x.advisor ? ` · <span>${esc(x.advisor)}</span>` : ""}</p>
+         <ul>${x.points.map(pt => `<li>${esc(pt)}</li>`).join("")}</ul>
+       </div>`;
+    wrap.appendChild(item);
+  });
+  return wrap;
+}
+
+function academicsRail() {
+  const wrap = el("div", "stack");
+  wrap.innerHTML =
+    `<table class="acad"><tbody>${ACADEMICS.map(([a, b, c, d]) =>
+      `<tr><td><b>${esc(a)}</b><span>${esc(b)}</span></td><td class="acad-when">${esc(c)}</td>
+       <td class="acad-score">${esc(d)}</td></tr>`).join("")}</tbody></table>
+     <div class="honours">${HONOURS.map(([k, v]) =>
+      `<div><b>${esc(k)}</b><span>${esc(v)}</span></div>`).join("")}</div>
+     <h3 class="sub-h">Coursework</h3>
+     <ul class="courses">${COURSES.map(([c, kind]) =>
+      `<li data-kind="${kind}">${esc(c)}</li>`).join("")}</ul>`;
+  return wrap;
+}
+
+function interestsRail() {
+  const wrap = el("div", "interests");
+  INTERESTS.forEach(x => {
+    const card = el("article", "interest");
+    card.innerHTML =
+      `<p class="interest-label">${esc(x.label)}</p>
+       <h3>${esc(x.headline)}</h3>
+       <p class="interest-body">${esc(x.body)}</p>
+       ${x.stats && x.stats.length ? `<div class="interest-stats">${x.stats.map(([v, k]) =>
+         `<div><b>${esc(v)}</b><span>${esc(k)}</span></div>`).join("")}</div>` : ""}
+       ${x.links ? `<p class="interest-links">${x.links.map(([l, h]) =>
+         `<a href="${h}" target="_blank" rel="noopener">${esc(l)}</a>`).join(" · ")}</p>` : ""}`;
+    wrap.appendChild(card);
+  });
+  return wrap;
+}
+
+function addArrows(shell, rail) {
+  ["left", "right"].forEach(dir => {
+    const b = el("button", `rail-arrow ${dir}`, dir === "left" ? "‹" : "›");
+    b.type = "button";
+    b.setAttribute("aria-label", `scroll ${dir}`);
+    b.addEventListener("click", () => rail.scrollBy({
+      left: (dir === "left" ? -1 : 1) * Math.round(rail.clientWidth * 0.82), behavior: "smooth" }));
+    shell.appendChild(b);
+  });
+}
+
 function renderRows(order) {
   const host = $("#rows");
   host.innerHTML = "";
@@ -118,22 +179,95 @@ function renderRows(order) {
     sec.id = "row-" + key;
     sec.appendChild(el("h2", "row-title", esc(def.label)));
 
-    const shell = el("div", "rail-shell");
-    const rail = def.kind === "skills" ? skillsRail() : el("div", "rail");
-    if (def.kind !== "skills") def.ids.map(byId).filter(Boolean).forEach(t => rail.appendChild(card(t)));
+    if (def.note) sec.appendChild(el("p", "row-note", esc(def.note)));
 
-    ["left", "right"].forEach(dir => {
-      const b = el("button", `rail-arrow ${dir}`, dir === "left" ? "‹" : "›");
-      b.type = "button";
-      b.setAttribute("aria-label", `scroll ${dir}`);
-      b.addEventListener("click", () => rail.scrollBy({
-        left: (dir === "left" ? -1 : 1) * Math.round(rail.clientWidth * 0.82), behavior: "smooth" }));
-      shell.appendChild(b);
-    });
+    const BLOCKS = { skills: skillsRail, experience: experienceRail,
+                     academics: academicsRail, interests: interestsRail };
+    if (BLOCKS[def.kind]) {
+      const block = BLOCKS[def.kind]();
+      if (def.kind === "skills") {
+        const shell = el("div", "rail-shell");
+        addArrows(shell, block);
+        shell.appendChild(block);
+        sec.appendChild(shell);
+      } else {
+        sec.appendChild(block);
+      }
+      host.appendChild(sec);
+      return;
+    }
+
+    const shell = el("div", "rail-shell");
+    const rail = el("div", "rail");
+    def.ids.map(byId).filter(Boolean)
+      .sort((a, b) => matchOf(b) - matchOf(a))
+      .forEach(t => rail.appendChild(card(t)));
+
+    addArrows(shell, rail);
     shell.appendChild(rail);
     sec.appendChild(shell);
     host.appendChild(sec);
   });
+}
+
+/* ─────────────────────── what are you looking for ─────────────────────── */
+/* Ticked traits drive two things: every card's match score, and the order of the work rail.
+   With nothing ticked the scores fall back to the editorial defaults in data.js. */
+const PICK_KEY = "dspflix-traits";
+let picked = new Set();
+
+function readPicked() {
+  try { return new Set(JSON.parse(localStorage.getItem(PICK_KEY) || "[]")); }
+  catch { return new Set(); }
+}
+function writePicked() {
+  try { localStorage.setItem(PICK_KEY, JSON.stringify([...picked])); } catch {}
+}
+
+function matchOf(t) {
+  if (!picked.size) return t.match;
+  const mine = new Set(TRAIT_MAP[t.id] || []);
+  let hit = 0;
+  picked.forEach(k => { if (mine.has(k)) hit++; });
+  const share = hit / picked.size;
+  // a small slice of the editorial score breaks ties without ever outranking a real overlap
+  return Math.max(41, Math.min(99, Math.round(46 + 50 * share + (t.match - 92) * 0.5)));
+}
+
+function buildPicker() {
+  const host = $("#traitList");
+  if (!host) return;
+  host.innerHTML = "";
+  TRAITS.forEach(([key, label]) => {
+    const id = "trait-" + key;
+    const li = el("li");
+    li.innerHTML = `<input type="checkbox" id="${id}" value="${key}">
+                    <label for="${id}">${esc(label)}</label>`;
+    li.querySelector("input").addEventListener("change", e => {
+      e.target.checked ? picked.add(key) : picked.delete(key);
+      writePicked();
+      syncPicker();
+      renderRows(TRACKS[track].rows);
+      const best = bestTitle();
+      if (best) renderHero(best, picked.size ? null : TRACKS[track].pitch);
+    });
+    host.appendChild(li);
+  });
+  syncPicker();
+}
+
+function syncPicker() {
+  $$("#traitList input").forEach(i => { i.checked = picked.has(i.value); });
+  const n = picked.size;
+  $("#traitCount").textContent = n
+    ? `${n} selected · everything below is re-scored and re-ordered`
+    : "Tick anything — the match scores and the running order change with you.";
+  $("#traitClear").hidden = !n;
+}
+
+function bestTitle() {
+  const pool = ROWS.featured.ids.map(byId).filter(Boolean);
+  return pool.slice().sort((a, b) => matchOf(b) - matchOf(a))[0];
 }
 
 /* ─────────────────────────── modal ─────────────────────────── */
@@ -146,7 +280,7 @@ function openModal(id) {
   $("#mTitle").textContent = t.title;
   $("#mSub").textContent = t.sub;
   $("#mMeta").innerHTML =
-    `<span class="match">${t.match}% match</span> · ${esc(t.year)} · ` +
+    `<span class="match">${matchOf(t)}% match</span> · ${esc(t.year)} · ` +
     `<span class="pill">${esc(t.rating)}</span> · ${esc(t.duration)}`;
   $("#mSynopsis").textContent = t.synopsis;
 
@@ -165,8 +299,13 @@ function openModal(id) {
       <span><b>${esc(h)}</b><span>${esc(b)}</span></span></li>`).join("");
   $("#mTags").innerHTML = (t.tags || []).map(x => `<li>${esc(x)}</li>`).join("");
 
+  $("#mGallery").innerHTML = (t.gallery || []).map(([src, cap]) =>
+    `<figure><img src="${src}" alt="${esc(cap)}" loading="lazy"><figcaption>${esc(cap)}</figcaption></figure>`).join("");
+  $("#mGalleryWrap").hidden = !(t.gallery && t.gallery.length);
+
   const rel = $("#mRelated");
   rel.innerHTML = "";
+  if (t.relatedText) rel.appendChild(el("p", "rel-text", esc(t.relatedText)));
   (t.related || []).map(byId).filter(Boolean).forEach(r => {
     const b = el("button", "rel");
     b.type = "button";
@@ -194,8 +333,10 @@ function closeModal() {
 /* ─────────────────────────── static bits ─────────────────────────── */
 function renderStatic() {
   $("#aboutBlurb").textContent = PROFILE.blurb;
-  $("#facts").innerHTML = FACTS
-    .map(([k, v]) => `<li><b>${esc(k)}</b><span>${esc(v)}</span></li>`).join("");
+  $("#aboutMore").innerHTML =
+    `Right now: ${esc(PROFILE.lab)}, with ${esc(PROFILE.advisor)}. Degrees, marks and ` +
+    `coursework are in <a href="#row-academics">Academics</a>; the cricket and the writing ` +
+    `are <a href="#row-interests">off the clock</a>.`;
   $("#contact").innerHTML = [
     ["Email", PROFILE.email, "mailto:" + PROFILE.email],
     ["GitHub", "@" + PROFILE.handle, PROFILE.github],
@@ -248,7 +389,7 @@ function playIntro(done) {
     }, reduce ? 320 : 900);
   };
 
-  setTimeout(finish, reduce ? 500 : 2050);
+  setTimeout(finish, reduce ? 500 : 1750);
   $("#introSkip").addEventListener("click", finish);
   wrap.addEventListener("click", finish);
   addEventListener("keydown", finish, { once: true });
@@ -256,14 +397,18 @@ function playIntro(done) {
 
 /* ─────────────────────────── boot ─────────────────────────── */
 renderStatic();
+picked = readPicked();
+buildPicker();
 buildGate();
 // ?p=researcher opens straight into a given cut — handy for sharing a tailored link.
 const param = new URLSearchParams(location.search).get("p");
 const saved = read();
-let needsGate = false;
-if (param && TRACKS[param]) setTrack(param);
+// The picker is the landing page: it follows the titles on every session, and is skipped
+// only when a link already says which cut to open.
+let needsGate = !(param && TRACKS[param]) && !location.hash.slice(1);
+if (param && TRACKS[param]) setTrack(param, !picked.size);
 else if (saved && TRACKS[saved]) setTrack(saved);
-else { setTrack("recruiter"); needsGate = true; }
+else setTrack("recruiter");
 
 playIntro(() => { if (needsGate) openGate(); });
 
@@ -271,6 +416,12 @@ const deep = location.hash.slice(1);
 if (deep && byId(deep)) { closeGate(); openModal(deep); }
 
 $("#switchProfile").addEventListener("click", openGate);
+const clearBtn = $("#traitClear");
+if (clearBtn) clearBtn.addEventListener("click", () => {
+  picked = new Set(); writePicked(); syncPicker();
+  renderRows(TRACKS[track].rows);
+  renderHero(byId(TRACKS[track].hero), TRACKS[track].pitch);
+});
 $("#modalClose").addEventListener("click", closeModal);
 $("#modal").addEventListener("click", e => { if (e.target.id === "modal") closeModal(); });
 document.addEventListener("keydown", e => {

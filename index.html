@@ -22,7 +22,7 @@
      first frame and there is no flash of the page behind it. -->
 <div id="intro" class="intro">
   <div class="intro-stage" id="introStage" aria-hidden="true">
-    <span class="intro-mark">DSP</span><span class="intro-mark intro-bars">DSP</span><span class="intro-flix">FLIX</span>
+    <span class="intro-mark">DSP</span><span class="intro-mark intro-bars">DSP</span>
   </div>
   <button class="intro-skip" id="introSkip" type="button">Skip intro</button>
 </div>
@@ -38,7 +38,7 @@
 
 <header class="nav" id="nav">
   <div class="nav-left">
-    <a class="wordmark" href="#top" aria-label="Home">DSP<span>FLIX</span></a>
+    <a class="wordmark" href="#top" aria-label="Home">DSP</a>
     <nav class="nav-links" aria-label="Sections">
       <a href="#row-featured">Work</a>
       <a href="#row-publications">Research</a>
@@ -71,6 +71,15 @@
     </div>
   </section>
 
+  <section class="picker" id="picker" aria-labelledby="pickerTitle">
+    <div class="picker-head">
+      <h2 id="pickerTitle">What are you looking for?</h2>
+      <p id="traitCount"></p>
+    </div>
+    <ul class="traits" id="traitList"></ul>
+    <button class="btn-ghost picker-clear" id="traitClear" type="button" hidden>Clear all</button>
+  </section>
+
   <div id="rows" class="rows"></div>
 
   <section class="about" id="about">
@@ -78,7 +87,7 @@
       <div>
         <h2>About</h2>
         <p id="aboutBlurb"></p>
-        <ul class="facts" id="facts"></ul>
+        <p class="about-more" id="aboutMore"></p>
       </div>
       <aside class="contact-card">
         <h3>Get in touch</h3>
@@ -116,6 +125,10 @@
         <div class="stats" id="mStats"></div>
         <h3 class="modal-h">Episodes</h3>
         <ol class="episodes" id="mEpisodes"></ol>
+        <div id="mGalleryWrap" hidden>
+          <h3 class="modal-h">Recent samples</h3>
+          <div class="gallery" id="mGallery"></div>
+        </div>
       </div>
       <div class="modal-side">
         <h3 class="modal-h">Stack &amp; themes</h3>

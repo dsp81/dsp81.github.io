@@ -57,7 +57,7 @@ const TITLES = [
       ["Open the project page", "https://dsp81.github.io/flowsat-satellite-image/", "play"],
       ["Code", "https://github.com/dsp81/flowsat-satellite-image", "code"],
     ],
-    related: ["diffusion-guide", "povrl", "thesis"],
+    related: ["diffusion-guide", "povrl", "flowsat-c"],
   },
   {
     id: "povrl",
@@ -95,7 +95,7 @@ const TITLES = [
       ["Open the report", "https://dsp81.github.io/RL---Adaptive-Tile-Selection/", "play"],
       ["Code", "https://github.com/dsp81/RL---Adaptive-Tile-Selection", "code"],
     ],
-    related: ["flowsat", "thesis", "yourtts"],
+    related: ["flowsat", "flowsat-c", "yourtts"],
   },
   {
     id: "yourtts",
@@ -172,40 +172,58 @@ const TITLES = [
     related: ["flowsat", "yourtts", "povrl"],
   },
   {
-    id: "thesis",
+    id: "flowsat-c",
     kind: "continue",
-    title: "Controllable Foundation Models for Earth Observation",
-    sub: "Master's thesis · Sustainability Lab",
+    title: "FlowSat-C",
+    sub: "Making a 4B generative model actually listen to metadata",
     year: "2026 —",
     rating: "In production",
     match: 99,
     progress: 45,
-    duration: "Jan 2026 – present",
-    tags: ["Research", "Generative Models", "Remote Sensing", "Causality"],
-    art: "assets/art/fs_10.jpg",
-    backdrop: "assets/art/hero_mixed.jpg",
+    duration: "Master's thesis · Sustainability Lab",
+    tags: ["Generative AI", "Diffusion & Flow Matching", "Remote Sensing", "Research",
+           "Interpretability"],
+    art: "assets/art/flowsatc_geo.jpg",
+    backdrop: "assets/art/hero_flowsatc.jpg",
     logline:
-      "If a generative model claims to be conditioned on the world, make it prove the world moved " +
-      "when you asked it to.",
+      "A falling FID and a finished progress bar are perfectly compatible with the model " +
+      "ignoring every dial you gave it. This is the fix.",
     synopsis:
-      "Ongoing thesis work with " + PROFILE.advisor + " at the " + PROFILE.lab + ": controllable, " +
-      "metadata-conditioned generative models for Earth observation, a controllability benchmark " +
-      "that quantifies per-field causal effects, and extensions of the flow-matching transformer " +
-      "into image-to-image — temporal inpainting, temporal generation, GSD-controlled " +
-      "super-resolution and change-guided generation.",
+      "Metadata conditioning rebuilt on FLUX.2-klein-base-4B. In v1 the model accepted latitude, " +
+      "longitude, GSD, cloud and date but was barely controllable by them — measured ordering was " +
+      "GSD > cloud > season > geography (≈ null). Two causes, both structural: rich captions " +
+      "already described season and biome, so the model used text (redundancy); and metadata " +
+      "entered as one global vector in the shared AdaLN modulation, which cannot express a " +
+      "spatially varying effect (bandwidth). The rebuild gives metadata its own tokens in joint " +
+      "attention, a spectral pathway that applies polar-separable gains in the 2-D FFT — GSD is " +
+      "literally a Nyquist cutoff, cloud is an atmospheric MTF — and captions deliberately " +
+      "stripped of anything the metadata already says.",
     stats: [
-      ["Controllability", "per-field causal effects, measured"],
-      ["Image-to-image", "temporal, super-resolution, change-guided"],
-      ["In progress", "thesis in writing"],
+      ["FLUX.2-klein", "4B flow-matching backbone"],
+      ["8 field groups", "→ tokens + one global vector"],
+      ["Spherical harmonics", "geography on a sphere, k ≤ 4"],
+      ["FID − control", "what checkpoint selection scores"],
     ],
     episodes: [
-      ["A benchmark for control", "Turn a metadata dial and measure what actually changed — per field, causally."],
-      ["Temporal inpainting", "Fill a gap in a time series of one place instead of hallucinating a new one."],
-      ["GSD-controlled super-resolution", "Resolution as a conditioning field rather than a fixed training choice."],
-      ["Change-guided generation", "Generate the after, given the before and the change you asked for."],
+      ["Diagnose, do not patch",
+       "v1's failure was invisible to the metrics being watched: loss fell, FID fell, CLIP rose, controllability sat at zero. Every diagnostic in the rebuild exists so that cannot recur."],
+      ["Take the information out of the captions",
+       "If the caption already says “autumn, temperate forest”, the metadata vector is redundant and the model routes around it. Captions are now metadata-agnostic by construction."],
+      ["Give conditioning somewhere to go",
+       "Metadata as tokens in joint attention, plus a spectral pathway operating in frequency space — the one place a global scale-and-shift could never reach."],
+      ["Encode each field on its own geometry",
+       "Real spherical harmonics for coordinates, cyclic day-of-year and sun azimuth, log₂ GSD, learned nulls rather than zero-fill, and no Fourier basis on the year so unseen years cannot wrap onto old ones."],
+      ["Measure control, not just quality",
+       "Location-level validation splits, fixed stratified timesteps, per-field response probes, attention-mass tracking, and a checkpoint selector that scores FID minus controllability."],
     ],
-    links: [["Lab", "https://sustainability-lab.github.io/", "play"]],
-    related: ["flowsat", "povrl", "diffusion-guide"],
+    gallery: [
+      ["assets/art/flowsatc_geo.jpg", "Same scene, geography dialled across the row — the field that was inert in v1."],
+      ["assets/art/flowsatc_gsd.jpg", "Ground sample distance sweep: a bandwidth parameter, now driven through a spectral pathway."],
+      ["assets/art/flowsatc_season.jpg", "Season sweep on fixed scenes and seeds."],
+      ["assets/art/flowsatc_koppen.jpg", "Köppen climate classes as a conditioning axis."],
+    ],
+    links: [["Sustainability Lab", "https://sustainability-lab.github.io/", "play"]],
+    related: ["flowsat", "diffusion-guide"],
   },
   {
     id: "zelite",
@@ -237,7 +255,116 @@ const TITLES = [
       ["Extraction", "Schema-first JSON so downstream systems can actually consume it."],
     ],
     links: [],
-    related: ["thesis", "diffusion-guide"],
+    noLinks: true,
+    related: [],
+    relatedText:
+      "Closest thing on this site to it is the diffusion guide — both are about making " +
+      "something complicated usable by somebody else.",
+  },
+];
+
+
+/* ── what a visitor can say they are looking for ────────────────────────────── */
+/* Ticking these recomputes every match score and reorders the rails. Each title lists the
+   traits it genuinely has; the score is overlap, not decoration. */
+const TRAITS = [
+  ["generative",      "Generative models"],
+  ["diffusion",       "Diffusion & flow matching"],
+  ["remote-sensing",  "Satellite & remote sensing"],
+  ["rl",              "Reinforcement learning"],
+  ["speech",          "Speech & NLP"],
+  ["agents",          "LLM agents & tooling"],
+  ["evaluation",      "Evaluation & interpretability"],
+  ["writing",         "Writing & teaching"],
+  ["shipping",        "Shipped production code"],
+  ["research",        "Peer-reviewed research"],
+];
+
+const TRAIT_MAP = {
+  "flowsat":         ["generative", "diffusion", "remote-sensing", "research", "evaluation"],
+  "flowsat-c":       ["generative", "diffusion", "remote-sensing", "research", "evaluation"],
+  "povrl":           ["rl", "remote-sensing", "evaluation", "shipping"],
+  "yourtts":         ["speech", "generative", "evaluation"],
+  "diffusion-guide": ["writing", "diffusion", "generative", "shipping"],
+  "zelite":          ["agents", "shipping", "evaluation"],
+};
+
+/* ── experience ─────────────────────────────────────────────────────────────── */
+const EXPERIENCE = [
+  {
+    role: "Student Researcher — Master's thesis",
+    org: "Sustainability Lab, IIT Gandhinagar",
+    when: "Jan 2026 — present",
+    advisor: "Advisor: Prof. Nipun Batra",
+    points: [
+      "Leading thesis work on controllable, metadata-conditioned generative models for Earth observation.",
+      "Designing a controllability benchmark that quantifies per-field causal effects instead of trusting FID.",
+      "Extending the flow-matching transformer to image-to-image: temporal inpainting, temporal generation, GSD-controlled super-resolution and change-guided generation.",
+    ],
+    title: "flowsat-c",
+  },
+  {
+    role: "Software Engineering Intern",
+    org: "Zelite Solutions (Microsoft Solutions Partner)",
+    when: "May — June 2025",
+    advisor: "LLM-powered automation platform",
+    points: [
+      "Designed and built an end-to-end AI automation platform orchestrating web retrieval, LLM inference and structured information extraction.",
+      "Engineered a modular agent with adjustable search depth, query strategies and context budgets, token-efficient prompting and schema-driven JSON generation.",
+      "Benchmarked local models (DeepSeek-R1, Mistral-7B, Phi-3) against cloud OpenAI models, taking multi-hour company research workflows to under five minutes.",
+    ],
+    title: "zelite",
+  },
+];
+
+/* ── academics ──────────────────────────────────────────────────────────────── */
+const ACADEMICS = [
+  ["Dual degree — M.Tech CSE + B.Tech EE", "Indian Institute of Technology Gandhinagar", "2022 — 2027", "CPI 8.07"],
+  ["Class XII (CBSE)", "Delhi Public School, Bopal", "—", "95.2%"],
+  ["Class X (CBSE)", "Delhi Public School, Bopal", "—", "97%"],
+];
+
+const HONOURS = [
+  ["Dean's List", "IIT Gandhinagar — semesters 1 and 2, for academic performance (SPI 8.5+)"],
+  ["Student Guide", "Selected to mentor incoming first-years, coordinating with 40 student guides"],
+  ["BMVC 2026", "First-author paper accepted"],
+];
+
+/* ── coursework ─────────────────────────────────────────────────────────────── */
+const COURSES = [
+  ["Machine Learning", "core"],
+  ["Deep Learning", "core"],
+  ["Artificial Intelligence", "core"],
+  ["Computer Vision", "core"],
+  ["Natural Language Processing", "core"],
+  ["AI for Social Good", "applied"],
+  ["Data Science", "applied"],
+  ["Probability & Statistics", "maths"],
+  ["Data Structures & Algorithms I", "systems"],
+  ["Data Structures & Algorithms II", "systems"],
+];
+
+/* ── off the clock ──────────────────────────────────────────────────────────── */
+const INTERESTS = [
+  {
+    id: "cricket",
+    label: "Cricket",
+    headline: "Opening spell, and then the top order",
+    body:
+      "Fast bowler who takes the new ball, and a top-order batsman when the innings turns " +
+      "around. Represented IIT Gandhinagar at the Inter-IIT Sports Meet — quarter-finalists in " +
+      "the 56th and 57th editions — and captained Mighty Mambas to the CCL'25 title.",
+    stats: [["CCL'25", "won it, as captain"], ["Inter-IIT", "56th & 57th, quarter-finals"],
+            ["New ball", "opening spell"], ["Top order", "with the bat"]],
+  },
+  {
+    id: "writing",
+    label: "Writing",
+    headline: "Stories, when the GPUs are busy",
+    body:
+      "I write short fiction. It is the same instinct as the diffusion guide — work out what " +
+      "the reader already believes, then decide which sentence changes it.",
+    stats: [],
   },
 ];
 
@@ -269,7 +396,8 @@ const TRACKS = {
     pitch:
       "Published first-author work at BMVC 2026, a shipped LLM automation platform, and three " +
       "projects you can open and poke at right now.",
-    rows: ["featured", "publications", "generative", "skills", "continue", "behind"],
+    traits: ["research", "shipping", "agents"],
+    rows: ["featured", "experience", "skills", "academics", "interests"],
   },
   researcher: {
     label: "Researcher",
@@ -277,7 +405,8 @@ const TRACKS = {
     pitch:
       "Generative models for Earth observation, a reproduction that reports its own negative " +
       "result, and a diffusion guide written to be argued with.",
-    rows: ["publications", "featured", "continue", "generative", "skills", "behind"],
+    traits: ["research", "generative", "evaluation", "remote-sensing"],
+    rows: ["featured", "experience", "skills", "academics", "interests"],
   },
   engineer: {
     label: "Engineer",
@@ -285,7 +414,8 @@ const TRACKS = {
     pitch:
       "Everything here runs: static sites with no build step, reproducible runs, and code you can " +
       "read without a setup guide.",
-    rows: ["featured", "generative", "skills", "publications", "continue", "behind"],
+    traits: ["shipping", "agents", "evaluation"],
+    rows: ["featured", "skills", "experience", "academics", "interests"],
   },
   browsing: {
     label: "Just browsing",
@@ -293,15 +423,16 @@ const TRACKS = {
     pitch:
       "Start with the diffusion guide — it is the one that explains the rest, and it has things " +
       "to drag.",
-    rows: ["generative", "featured", "publications", "continue", "skills", "behind"],
+    traits: ["writing", "generative"],
+    rows: ["featured", "interests", "skills", "experience", "academics"],
   },
 };
 
 const ROWS = {
-  featured:     { label: "Digvijay originals",        ids: ["flowsat", "povrl", "yourtts", "diffusion-guide", "thesis"] },
-  publications: { label: "Published & peer-reviewed", ids: ["flowsat", "povrl", "thesis"] },
-  generative:   { label: "Generative models",         ids: ["flowsat", "diffusion-guide", "yourtts", "thesis"] },
-  continue:     { label: "Continue watching",         ids: ["thesis", "flowsat"] },
-  behind:       { label: "Behind the scenes",         ids: ["zelite", "yourtts", "povrl"] },
-  skills:       { label: "Top 10 skills today",       kind: "skills" },
+  featured:   { label: "The work", ids: ["flowsat-c", "flowsat", "povrl", "yourtts", "diffusion-guide"],
+                note: "Five things, each here once. Order and match scores follow what you ticked above." },
+  experience: { label: "Experience",             kind: "experience" },
+  skills:     { label: "Top 10 skills today",    kind: "skills" },
+  academics:  { label: "Academics & coursework", kind: "academics" },
+  interests:  { label: "Off the clock",          kind: "interests" },
 };
