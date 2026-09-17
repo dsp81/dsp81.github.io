@@ -283,13 +283,20 @@ const TRAITS = [
   ["research",        "Peer-reviewed research"],
 ];
 
+/* Weighted, not binary. A flat list made half the page tie on "software development" and let
+   the in-progress rebuild outrank the published paper on "generative models". The weight is
+   how central the trait is to that piece of work: 1.0 is what it is mostly about. */
 const TRAIT_MAP = {
-  "flowsat":         ["generative", "diffusion", "remote-sensing", "research", "evaluation"],
-  "flowsat-c":       ["generative", "diffusion", "remote-sensing", "research", "evaluation", "software"],
-  "povrl":           ["rl", "remote-sensing", "evaluation", "shipping", "software"],
-  "yourtts":         ["speech", "generative", "evaluation"],
-  "diffusion-guide": ["writing", "diffusion", "generative", "shipping", "software"],
-  "zelite":          ["agents", "shipping", "evaluation", "software"],
+  "flowsat":         { generative: 1.0, diffusion: 1.0, "remote-sensing": 1.0, research: 1.0,
+                       evaluation: 0.6, software: 0.3 },
+  "flowsat-c":       { evaluation: 1.0, generative: 0.9, diffusion: 0.9, "remote-sensing": 0.9,
+                       research: 0.7, software: 0.6 },
+  "povrl":           { rl: 1.0, evaluation: 0.9, "remote-sensing": 0.8, shipping: 0.8,
+                       software: 0.8, research: 0.5 },
+  "yourtts":         { speech: 1.0, generative: 0.6, evaluation: 0.5, software: 0.5 },
+  "diffusion-guide": { writing: 1.0, diffusion: 0.8, shipping: 0.7, software: 0.7,
+                       generative: 0.6 },
+  "zelite":          { agents: 1.0, software: 1.0, shipping: 1.0, evaluation: 0.5 },
 };
 
 /* ── experience ─────────────────────────────────────────────────────────────── */
@@ -305,6 +312,8 @@ const EXPERIENCE = [
       "Extending the flow-matching transformer to image-to-image: temporal inpainting, temporal generation, GSD-controlled super-resolution and change-guided generation.",
     ],
     title: "flowsat-c",
+    traits: { research: 1.0, generative: 1.0, diffusion: 0.9, "remote-sensing": 0.9,
+              evaluation: 0.9, software: 0.5 },
   },
   {
     role: "Software Engineering Intern",
@@ -317,6 +326,7 @@ const EXPERIENCE = [
       "Benchmarked local models (DeepSeek-R1, Mistral-7B, Phi-3) against cloud OpenAI models, taking multi-hour company research workflows to under five minutes.",
     ],
     title: "zelite",
+    traits: { software: 1.0, agents: 1.0, shipping: 1.0, evaluation: 0.5 },
   },
 ];
 
@@ -331,6 +341,7 @@ const HONOURS = [
   ["Dean's List", "IIT Gandhinagar — semesters 1 and 2, for academic performance (SPI 8.5+)"],
   ["Student Guide", "Selected to mentor incoming first-years, coordinating with 40 student guides"],
   ["BMVC 2026", "First-author paper accepted"],
+  ["Codeforces", "Specialist — competitive programming in C++"],
 ];
 
 /* ── coursework ─────────────────────────────────────────────────────────────── */
@@ -431,7 +442,7 @@ const SKILLS = [
   ["Speech synthesis", "VITS, YourTTS, speaker encoders"],
   ["Computer vision", "detection, super-resolution"],
   ["Python · C++ · MATLAB", "and Verilog, when provoked"],
-  ["Data science", "XGBoost, scikit-learn, pandas"],
+  ["Competitive programming", "Codeforces Specialist, in C++"],
   ["Explaining things", "guides, reports, visualisations"],
 ];
 

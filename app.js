@@ -119,10 +119,15 @@ function skillsRail() {
 
 function experienceRail() {
   const wrap = el("div", "stack");
-  EXPERIENCE.forEach(x => {
+  const list = picked.size
+    ? EXPERIENCE.slice().sort((a, b) => matchExp(b) - matchExp(a))
+    : EXPERIENCE;
+  list.forEach((x, idx) => {
     const item = el("article", "xp");
     item.innerHTML =
-      `<div class="xp-when">${esc(x.when)}</div>
+      `<div class="xp-when">${esc(x.when)}
+         ${picked.size && idx === 0 ? '<span class="xp-top">Closest to your answers</span>' : ""}
+       </div>
        <div class="xp-body">
          <h3>${esc(x.role)}</h3>
          <p class="xp-org">${esc(x.org)}${x.advisor ? ` · <span>${esc(x.advisor)}</span>` : ""}</p>
@@ -257,15 +262,18 @@ function writePicked() {
   try { localStorage.setItem(PICK_KEY, JSON.stringify([...picked])); } catch {}
 }
 
-function matchOf(t) {
-  if (!picked.size) return t.match;
-  const mine = new Set(TRAIT_MAP[t.id] || []);
-  let hit = 0;
-  picked.forEach(k => { if (mine.has(k)) hit++; });
-  const share = hit / picked.size;
-  // a small slice of the editorial score breaks ties without ever outranking a real overlap
-  return Math.max(41, Math.min(99, Math.round(46 + 50 * share + (t.match - 92) * 0.5)));
+/* Weighted overlap: how much of what you asked for this piece of work actually is. The
+   editorial score only breaks ties — at 0.15 of a point per rank it can never outrank a real
+   difference in weight. */
+function scoreFor(weights, base) {
+  if (!picked.size) return base;
+  let sum = 0;
+  picked.forEach(k => { sum += (weights && weights[k]) || 0; });
+  const share = sum / picked.size;
+  return Math.max(40, Math.min(99, Math.round(44 + 55 * share + ((base || 90) - 92) * 0.15)));
 }
+const matchOf = t => scoreFor(TRAIT_MAP[t.id], t.match);
+const matchExp = x => scoreFor(x.traits, 90);
 
 /* Answers are staged while the dialog is open and only committed on submit, so the page
    behind it never reshuffles under the reader mid-question. */
