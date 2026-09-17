@@ -50,6 +50,7 @@ function buildGate() {
   });
 }
 const openGate = () => { $("#gate").hidden = false; document.body.style.overflow = "hidden"; };
+
 const closeGate = () => { $("#gate").hidden = true; document.body.style.overflow = ""; };
 
 function setTrack(key) {
@@ -209,15 +210,62 @@ function renderStatic() {
     `<a href="mailto:${PROFILE.email}">${esc(PROFILE.email)}</a>`;
 }
 
+/* ─────────────────────────── opening title ─────────────────────────── */
+/* Plays once per tab. On exit the mark is FLIPped onto the nav wordmark, so the logo lands
+   where the page's own logo lives instead of dissolving in mid-air. */
+const INTRO_KEY = "dspflix-intro";
+function introShouldPlay() {
+  const p = new URLSearchParams(location.search).get("intro");
+  if (p === "1") return true;
+  if (p === "0" || location.hash.slice(1)) return false;   // deep links skip the titles
+  try { return !sessionStorage.getItem(INTRO_KEY); } catch { return true; }
+}
+
+function playIntro(done) {
+  const wrap = $("#intro"), stage = $("#introStage");
+  if (!wrap || !introShouldPlay()) { if (wrap) wrap.remove(); document.body.classList.remove("intro-playing"); done(); return; }
+  try { sessionStorage.setItem(INTRO_KEY, "1"); } catch {}
+
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let finished = false;
+  const finish = () => {
+    if (finished) return;
+    finished = true;
+    const mark = $(".wordmark");
+    const to = mark && mark.getBoundingClientRect();
+    const from = stage.getBoundingClientRect();
+    if (to && to.width && !reduce) {
+      const scale = to.height / from.height;
+      stage.style.transition = "transform .78s cubic-bezier(.65,0,.2,1)";
+      stage.style.transform =
+        `translate(${to.left - from.left}px, ${to.top - from.top}px) scale(${scale})`;
+    }
+    setTimeout(() => wrap.classList.add("is-out"), reduce ? 0 : 340);
+    setTimeout(() => {
+      wrap.remove();
+      document.body.classList.remove("intro-playing");
+      done();
+    }, reduce ? 320 : 900);
+  };
+
+  setTimeout(finish, reduce ? 500 : 2050);
+  $("#introSkip").addEventListener("click", finish);
+  wrap.addEventListener("click", finish);
+  addEventListener("keydown", finish, { once: true });
+}
+
 /* ─────────────────────────── boot ─────────────────────────── */
 renderStatic();
 buildGate();
 // ?p=researcher opens straight into a given cut — handy for sharing a tailored link.
 const param = new URLSearchParams(location.search).get("p");
 const saved = read();
+let needsGate = false;
 if (param && TRACKS[param]) setTrack(param);
 else if (saved && TRACKS[saved]) setTrack(saved);
-else { setTrack("recruiter"); openGate(); }
+else { setTrack("recruiter"); needsGate = true; }
+
+playIntro(() => { if (needsGate) openGate(); });
 
 const deep = location.hash.slice(1);
 if (deep && byId(deep)) { closeGate(); openModal(deep); }

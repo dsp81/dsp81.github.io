@@ -24,6 +24,42 @@ button{font:inherit;color:inherit}
 /* An author `display` beats the `hidden` attribute's UA rule, so say it explicitly. */
 [hidden]{display:none !important}
 
+/* ── opening title ───────────────────────────────────────────────────────── */
+/* The mark draws in, a bar of light sweeps through it, FLIX joins, and then the whole thing
+   flies into the nav wordmark rather than simply fading — so the page absorbs the logo
+   instead of the logo disappearing in front of it. */
+body.intro-playing{overflow:hidden}
+.intro{position:fixed;inset:0;z-index:5000;background:#000;display:grid;place-items:center;
+  transition:opacity .5s ease}
+.intro.is-out{opacity:0;pointer-events:none}
+.intro-stage{position:relative;display:flex;align-items:baseline;
+  font-family:var(--display);font-size:clamp(58px,13vw,170px);line-height:1;
+  letter-spacing:.06em;transform-origin:left top;will-change:transform}
+.intro-mark{color:var(--red);animation:markIn .62s cubic-bezier(.2,.75,.25,1) both}
+.intro-bars{position:absolute;left:0;top:0;color:transparent;
+  background-image:repeating-linear-gradient(90deg,
+    rgba(255,255,255,.92) 0 3px, rgba(255,255,255,0) 3px 13px);
+  background-size:200% 100%;-webkit-background-clip:text;background-clip:text;
+  animation:sweep 1.15s .28s ease-in-out both;pointer-events:none}
+.intro-flix{color:#fff;opacity:0;animation:flixIn .5s 1.28s cubic-bezier(.2,.75,.25,1) both}
+.intro-skip{position:absolute;bottom:34px;right:34px;background:none;border:1px solid #2a2a33;
+  color:#8d8d99;font-size:13px;padding:7px 14px;border-radius:5px;cursor:pointer;
+  opacity:0;animation:skipIn .4s .9s forwards}
+.intro-skip:hover{color:#f6f6f8;border-color:#8d8d99}
+@keyframes markIn{from{opacity:0;transform:scale(1.28)}to{opacity:1;transform:scale(1)}}
+@keyframes flixIn{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+@keyframes skipIn{to{opacity:1}}
+@keyframes sweep{
+  0%{background-position:-40% 0;opacity:0}
+  12%{opacity:1}
+  80%{opacity:1}
+  100%{background-position:140% 0;opacity:0}}
+@media (prefers-reduced-motion:reduce){
+  .intro-mark,.intro-flix,.intro-bars,.intro-skip{animation:none;opacity:1}
+  .intro-bars{display:none}
+  .intro-stage{transition:none !important}
+}
+
 /* ── profile gate ────────────────────────────────────────────────────────── */
 .gate{position:fixed;inset:0;z-index:2000;background:var(--bg);
   display:grid;place-items:center;padding:24px}

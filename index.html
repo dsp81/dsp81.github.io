@@ -16,7 +16,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="intro-playing">
+
+<!-- Opening title. Markup sits in the HTML rather than being injected, so it paints on the
+     first frame and there is no flash of the page behind it. -->
+<div id="intro" class="intro">
+  <div class="intro-stage" id="introStage" aria-hidden="true">
+    <span class="intro-mark">DSP</span><span class="intro-mark intro-bars">DSP</span><span class="intro-flix">FLIX</span>
+  </div>
+  <button class="intro-skip" id="introSkip" type="button">Skip intro</button>
+</div>
 
 <!-- Profile gate: the site is the same material cut four ways. -->
 <div id="gate" class="gate" hidden>
