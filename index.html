@@ -2,37 +2,55 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Digvijay Singh Parihar — generative models for Earth observation</title>
-<meta name="description" content="Portfolio of Digvijay Singh Parihar: FlowSat (BMVC 2026), reinforcement-learned satellite tile acquisition, Hindi zero-shot speech synthesis, and an interactive guide to diffusion models.">
+<meta name="description" content="Digvijay Singh Parihar — ML researcher at IIT Gandhinagar. First author of FlowSat (BMVC 2026), a master's thesis on controllable 4B-parameter generative models for satellite imagery, RL-based satellite tile acquisition, Hindi zero-shot TTS, hyperspectral denoising, and an interactive guide to diffusion models.">
 <meta name="author" content="Digvijay Singh Parihar">
-<meta property="og:title" content="Digvijay Singh Parihar — generative models for Earth observation">
-<meta property="og:description" content="FlowSat (BMVC 2026), RL-based satellite tile acquisition, Hindi zero-shot TTS, and an interactive diffusion guide.">
+<meta name="theme-color" content="#000000">
+<link rel="canonical" href="https://dsp81.github.io/">
+<meta property="og:title" content="Digvijay Singh Parihar — now streaming">
+<meta property="og:description" content="Generative models for Earth observation. FlowSat (BMVC 2026, first author), FlowSat-C, RL tile acquisition, Hindi TTS, hyperspectral denoising — laid out like a streaming service.">
 <meta property="og:type" content="profile">
-<meta property="og:image" content="assets/art/hero_flowsat.jpg">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='12' fill='%230b0b0f'/><text x='32' y='47' font-size='44' font-family='Impact,sans-serif' fill='%23e50914' text-anchor='middle'>D</text></svg>">
+<meta property="og:url" content="https://dsp81.github.io/">
+<meta property="og:image" content="https://dsp81.github.io/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://dsp81.github.io/assets/og.jpg">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='12' fill='%23000'/><text x='32' y='49' font-size='50' font-family='Impact,sans-serif' fill='%23e50914' text-anchor='middle'>D</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20260917-191029">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/art/hero_ports.jpg">
+<link rel="stylesheet" href="styles.css?v=20260926-134051">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Person","name":"Digvijay Singh Parihar",
+ "url":"https://dsp81.github.io/","email":"mailto:digvijaysingh.parihar@iitgn.ac.in",
+ "jobTitle":"Student Researcher — generative models for Earth observation",
+ "affiliation":{"@type":"CollegeOrUniversity","name":"Indian Institute of Technology Gandhinagar"},
+ "alumniOf":{"@type":"CollegeOrUniversity","name":"Indian Institute of Technology Gandhinagar"},
+ "knowsAbout":["Diffusion models","Flow matching","Remote sensing","Computer vision","Reinforcement learning","Speech synthesis","LLM agents","PyTorch"],
+ "sameAs":["https://github.com/dsp81","https://www.linkedin.com/in/digvijay-singh-parihar-b73536259/"]}
+</script>
 </head>
 <body class="intro-playing">
+<a class="skip-link" href="#rows">Skip to content</a>
 
-<!-- Opening title. Markup sits in the HTML rather than being injected, so it paints on the
-     first frame and there is no flash of the page behind it. -->
+<!-- Opening title. In the HTML rather than injected, so it paints on the first frame. -->
 <div id="intro" class="intro">
   <div class="intro-stage" id="introStage" aria-hidden="true">
     <span class="intro-mark">DSP</span><span class="intro-mark intro-bars">DSP</span>
   </div>
+  <div class="intro-rays" aria-hidden="true"></div>
   <button class="intro-skip" id="introSkip" type="button">Skip intro</button>
 </div>
 
-<!-- Profile gate: the site is the same material cut four ways. -->
+<!-- Profile gate -->
 <div id="gate" class="gate" hidden>
   <div class="gate-inner">
     <p class="gate-title">Who's watching?</p>
     <ul class="profiles" id="profiles"></ul>
-    <p class="gate-note">Every profile shows the same work, ordered differently. You can switch any time.</p>
+    <p class="gate-note">Same work, four different cuts. Switch any time from the top right.</p>
   </div>
 </div>
 
@@ -40,121 +58,210 @@
   <div class="nav-left">
     <a class="wordmark" href="#top" aria-label="Home">DSP</a>
     <nav class="nav-links" aria-label="Sections">
-      <a href="#row-featured">Work</a>
-      <a href="#row-publications">Research</a>
+      <a href="#top" data-nav="home">Home</a>
+      <a href="#row-top">Projects</a>
+      <a href="#row-experience">Experience</a>
       <a href="#row-skills">Skills</a>
-      <a href="#about">About</a>
+      <a href="#row-mylist" id="navMyList" hidden>My List</a>
+      <a href="#contact">Contact</a>
     </nav>
   </div>
   <div class="nav-right">
+    <div class="search" id="search">
+      <button class="search-btn" id="searchBtn" type="button" aria-label="Search">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </button>
+      <input id="searchInput" type="search" placeholder="Titles, skills, tools…" aria-label="Search titles and skills" autocomplete="off">
+    </div>
     <a class="icon-link" id="navGithub" href="#" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
       <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><path fill="currentColor" d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.55v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.34-1.3-1.7-1.3-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.2 1.77 1.2 1.03 1.78 2.7 1.27 3.36.97.1-.75.4-1.27.73-1.56-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.5 3.17-1.18 3.17-1.18.63 1.59.23 2.76.12 3.05.74.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.4-5.25 5.69.41.36.78 1.06.78 2.14v3.17c0 .3.2.66.8.55A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg>
     </a>
     <a class="icon-link" id="navLinkedin" href="#" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn">
       <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05a3.74 3.74 0 0 1 3.37-1.85c3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
     </a>
-    <button class="btn-ghost" id="tuneBtn" type="button">Tune results</button>
-    <a class="btn-ghost" id="resumeTop" href="#" target="_blank" rel="noopener">Résumé</a>
-    <button class="chip-profile" id="switchProfile" type="button">
-      <span class="avatar" id="navAvatar" aria-hidden="true"></span>
-      <span id="navProfileName">Profile</span>
-    </button>
+    <a class="btn-red" id="resumeTop" href="#" target="_blank" rel="noopener">Résumé</a>
+    <div class="profile-menu" id="profileMenu">
+      <button class="chip-profile" id="switchProfile" type="button" aria-haspopup="true" aria-expanded="false">
+        <span class="avatar" id="navAvatar" aria-hidden="true"></span>
+        <span class="chip-caret" aria-hidden="true">▾</span>
+        <span class="sr-only" id="navProfileName">Profile</span>
+      </button>
+      <div class="menu" id="menu" hidden>
+        <ul class="menu-profiles" id="menuProfiles"></ul>
+        <hr>
+        <button type="button" data-act="trailer">▶ Play the trailer</button>
+        <button type="button" data-act="tune">⚙ Tune results</button>
+        <button type="button" data-act="series">ⓘ About Digvijay</button>
+        <button type="button" data-act="email">✉ Copy email</button>
+        <hr>
+        <button type="button" data-act="gate" class="menu-dim">Switch profiles</button>
+      </div>
+    </div>
   </div>
 </header>
 
 <main id="top">
-  <section class="hero" id="hero">
+  <!-- For crawlers, LLM fetchers and anyone with scripts off. Regenerated by bump.py from
+     data.js — edit data.js, not this block. -->
+<noscript><div class="noscript">
+<!-- PRERENDER:START -->
+<h1>Digvijay Singh Parihar</h1>
+<p><b>Dual degree M.Tech CSE + B.Tech EE, IIT Gandhinagar</b> · Gandhinagar, India</p>
+<p>I build generative and decision-making models for satellite imagery — and I care about what the numbers actually say afterwards. First author at BMVC 2026, currently writing a master&#x27;s thesis on controllable foundation models for Earth observation.</p><p>Open to ML research &amp; engineering roles — internships now, full-time from 2027.</p>
+<p><a href="mailto:digvijaysingh.parihar@iitgn.ac.in">digvijaysingh.parihar@iitgn.ac.in</a> · <a href="https://www.linkedin.com/in/digvijay-singh-parihar-b73536259/">LinkedIn</a> · <a href="https://github.com/dsp81">GitHub</a> · <a href="https://drive.google.com/file/d/1XvmNF9L68KHgZl6YI5KaVUmrREIg5Exw/view?usp=drive_link">Résumé (PDF)</a></p>
+<h2>Projects</h2>
+<h3>FlowSat (2026, BMVC 2026)</h3><p><i>Flow-matching diffusion transformers for satellite imagery.</i> A flow-matching diffusion transformer built on Sana-0.6B that conditions on seven metadata fields — longitude, latitude, month, day, year, ground sample distance, cloud cover — by encoding each one on its own geometry (a sphere for coordinates, a circle for dates) and grafting it into the pretrained AdaLN modulation through zero-initialised layers, so at step zero the network is byte-identical to the base model and nothing is unlearned on the way in. Flow matching replaces denoising, which is what buys the 20-step sampling. The project page reports both the submitted FID (31.10) and the released checkpoint&#x27;s (28.74), with the exact protocol to reproduce either; the weights are public on Hugging Face. Measured afterwards, the metadata control is uneven: GSD is strong, cloud and season are weak, and geography is close to null. The dial below shows it, and FlowSat-C is the fix.</p><p>Key numbers: FID 28.74 — released checkpoint · 31.10 as submitted; CLIP 0.3019 — prompt fidelity · 10k FMoW test samples; 20 steps — vs 100 for DiffusionSat (FID 35.27); 11× fewer — metadata-encoder parameters than SatCLIP</p><p>Credits: Digvijay Singh Parihar (first author), Rishabh Mondal, Nipun Batra · Sustainability Lab, IIT Gandhinagar</p><p><a href="https://dsp81.github.io/flowsat-satellite-image/">Open the project page</a> · <a href="https://github.com/dsp81/flowsat-satellite-image">Code</a> · <a href="https://huggingface.co/Djisgod/flowsat-fmow-512">Weights</a></p>
+<h3>FlowSat-C (2026 —, Master&#x27;s thesis)</h3><p><i>Making a 4B generative model actually listen to metadata.</i> Metadata conditioning rebuilt on FLUX.2-klein-base-4B. FlowSat — the BMVC model — accepted latitude, longitude, GSD, cloud and date but was barely controllable by most of them; measured ordering was GSD &gt; cloud &gt; season &gt; geography (≈ null). Two causes, both structural: rich captions already described season and biome, so the model used text (redundancy); and metadata entered as one global vector in the shared AdaLN modulation, which cannot express a spatially varying effect (bandwidth). The rebuild keeps the zero-initialised graft for global effects, gives metadata its own tokens in joint attention for spatial ones, and strips captions of anything the metadata already says. A third, spectral pathway was built, then measured against the data with pre-registered criteria — and removed. Training data: 257,248 curated FMoW images from 57,294 locations in 198 countries. It is training now; controllability results will be posted when they are validated.</p><p>Key numbers: FLUX.2-klein — 4B flow-matching backbone; 257,248 — curated images · 198 countries; 2 pathways — graft + tokens · a third was measured and cut; GSD &gt; cloud &gt; season &gt; geo ≈ 0 — measured control ordering in FlowSat; Results pending — training now · per-field probes built</p><p>Credits: Digvijay Singh Parihar · advised by Prof. Nipun Batra</p><p><a href="https://sustainability-lab.github.io/">Sustainability Lab</a></p>
+<h3>Poverty Mapping by RL (2025, Reproduction)</h3><p><i>The imagery wasn&#x27;t worth buying — and seven seeds say so.</i> A from-scratch reimplementation of Ayush et al. (AAAI 2021): a REINFORCE policy sees only free Sentinel-2 imagery, picks which of 256 high-resolution subtiles to buy, a YOLOv3 fine-tuned from COCO onto xView counts what is in them, and a gradient-boosted regressor predicts cluster consumption. Seven seeds, held-out splits, every number published.</p><p>Key numbers: 70.7% — of all detected objects recovered; 13.7% — of the imagery actually bought; 0.449 — detector mAP@50 on xView; r² 0.326 vs 0.314 — free imagery alone vs with purchases (±0.078 across 7 seeds)</p><p>Credits: Digvijay Singh Parihar</p><p><a href="https://dsp81.github.io/RL---Adaptive-Tile-Selection/">Open the report</a> · <a href="https://github.com/dsp81/RL---Adaptive-Tile-Selection">Code</a></p>
+<h3>YourTTS Hindi (2025, MOS 4.44)</h3><p><i>Zero-shot voice cloning that speaks Devanagari.</i> YourTTS (VITS) rebuilt for Hindi: the 165-symbol vocabulary was replaced with a 190-symbol Devanagari set, phoneme processing swapped for graphemes, the language embedding disabled for single-language conditioning, and the whole thing fine-tuned on IndicTTS-Hindi. The 512-d speaker encoder stays frozen, which is what keeps zero-shot cloning alive after the switch.</p><p>Key numbers: 4.44 / 5 — naturalness MOS · 48 ratings, 8 listeners; 4.75 / 5 — speaker similarity (SIM-MOS); 165 → 190 — symbols, rebuilt for Devanagari; 11.8k — IndicTTS-Hindi training samples</p><p>Credits: NLP course group project, IIT Gandhinagar</p><p><a href="https://dsp81.github.io/YourTTS-Hindi/">Hear the samples</a> · <a href="https://github.com/dsp81/YourTTS-Hindi">Code</a></p>
+<h3>Diffusion Models, Explained (2026, Interactive)</h3><p><i>Removing noise to make an image.</i> A long-form interactive guide to diffusion models, from why noise is the right thing to destroy, through the forward and reverse processes, the loss derivation, a single timestep in full, why the noise is Gaussian, and where flow matching goes next. Draggable noise schedules, playable sampling trajectories, and a conversational voice that assumes curiosity rather than a measure-theory course.</p><p>Key numbers: 8 chapters — problem → derivation → flow matching; Interactive — draggable schedules, playable sampling; From scratch — written, illustrated and built solo</p><p>Credits: Written, illustrated and built by Digvijay Singh Parihar</p><p><a href="https://diffusionguidedj.netlify.app/">Read the guide</a></p>
+<h3>Spectral Diffusion (2025, Research poster)</h3><p><i>Unmixing priors for hyperspectral image denoising.</i> Built on Diff-Unmix (CVPR 2024): the noisy hyperspectral cube is decomposed into spectral endmembers (pure material spectra) and abundance maps, and a DDPM-based reverse process denoises the abundances while the spectra stay intact. The additions: SVD thresholding on the abundance maps to strip small singular values before diffusion, a spectral transformer block for band-wise self-attention, and a multi-loss objective mixing MSE with a VGG16 perceptual term. Self-supervised — it never needs a clean ground truth.</p><p>Key numbers: +3.6 dB — PSNR over the Diff-Unmix baseline, as reported on the poster; 0.925 → 0.947 — SSIM, baseline → ours; 0 clean refs — self-supervised end to end</p><p>Credits: Digvijay Singh Parihar · Akbar Ali · advised by Prof. Shanmuganathan Raman</p><p><a href="https://github.com/dsp81/Denoising-Hyperspectral-Imagery">Code</a></p>
+<h3>LLM Research Agent (2025, Internship)</h3><p><i>Software engineering intern · Zelite Solutions.</i> An end-to-end automation platform at a Microsoft Solutions Partner that orchestrates web retrieval, LLM inference and structured extraction. The agent is modular: search depth, query strategy and context budget are all adjustable, output is schema-driven JSON, and local models (DeepSeek-R1, Mistral-7B, Phi-3) were benchmarked head to head against cloud OpenAI models.</p><p>Key numbers: Hours → minutes — under five, end to end; 4+ models — local and cloud, benchmarked; Schema-driven — JSON out, not prose</p><p>Credits: Digvijay Singh Parihar · Zelite Solutions (Microsoft Solutions Partner)</p>
+<h3>Node Graph Image Editor (2025, Pilot)</h3><p><i>C++ · Qt · OpenCV — image processing as a wired graph.</i> A desktop image-manipulation tool in C++ with Qt for the canvas and OpenCV for the operations. Each node is an atomic operation with its own parameters; connections compile into a directed acyclic graph that is topologically sorted and executed. The pilot ships the CMake build, the Qt canvas and the node infrastructure; the execution engine is the next episode.</p><p>Key numbers: C++ · Qt — custom canvas and node rendering; DAG engine — topological execution of OpenCV ops; CMake — cross-platform build</p><p>Credits: Digvijay Singh Parihar</p><p><a href="https://github.com/dsp81/Node-based-image-processor">Code</a></p>
+<h3>GeoDiff (Coming soon, In development)</h3><p><i>Diffusion that draws a city&#x27;s roads from its terrain.</i> Conditional diffusion for spatially embedded road-network graphs, conditioned on continuous geographic fields. Two stages: one diffuses node positions, the other diffuses the adjacency. The point is what baselines cannot do — complete a half-drawn network, and answer what-if questions by perturbing the terrain and resampling.</p><p>Credits: Digvijay Singh Parihar</p>
+<h2>Experience</h2>
+<h3>Student Researcher — Master&#x27;s thesis — Sustainability Lab, IIT Gandhinagar (Jan 2026 — present)</h3><ul><li>Leading thesis work on controllable, metadata-conditioned generative models for Earth observation on a 4B-parameter FLUX.2 backbone.</li><li>Designing a controllability benchmark that quantifies per-field causal effects instead of trusting FID.</li><li>Extending the flow-matching transformer to image-to-image: temporal inpainting, temporal generation, GSD-controlled super-resolution and change-guided generation.</li></ul>
+<h3>Software Engineering Intern — Zelite Solutions (Microsoft Solutions Partner) (May — June 2025)</h3><ul><li>Designed and built an end-to-end AI automation platform orchestrating web retrieval, LLM inference and structured information extraction.</li><li>Engineered a modular agent with adjustable search depth, query strategies and context budgets, token-efficient prompting and schema-driven JSON generation.</li><li>Benchmarked local models (DeepSeek-R1, Mistral-7B, Phi-3) against cloud OpenAI models, taking multi-hour company research workflows to under five minutes.</li></ul>
+<h3>Research Project — Hyperspectral denoising — CVIG Lab, IIT Gandhinagar (2025)</h3><ul><li>Extended Diff-Unmix (CVPR 2024) with SVD thresholding, a spectral transformer unit and a perceptual multi-loss.</li><li>Improved on the Diff-Unmix baseline by +3.6 dB PSNR and SSIM 0.925 → 0.947 (as reported on the project poster), fully self-supervised.</li></ul>
+<h2>Education</h2><ul><li>Dual degree — M.Tech CSE + B.Tech EE, Indian Institute of Technology Gandhinagar (2022 — 2027) — CPI 8.07</li><li>Class XII (CBSE), Delhi Public School, Bopal (—) — 95.2%</li><li>Class X (CBSE), Delhi Public School, Bopal (—) — 97%</li></ul>
+<h2>Honours</h2><ul><li><b>BMVC 2026</b> — First-author paper accepted</li><li><b>Dean&#x27;s List</b> — IIT Gandhinagar — semesters 1 and 2, for academic performance (SPI 8.5+)</li><li><b>Codeforces Specialist</b> — Competitive programming in C++</li><li><b>Student Guide</b> — Selected to mentor incoming first-years, one of 40 guides</li><li><b>Captain, CCL&#x27;25 champions</b> — Led Mighty Mambas to the title</li><li><b>Inter-IIT Sports Meet</b> — Cricket — quarter-finalists in the 56th and 57th editions</li></ul>
+<h2>Skills</h2><ul><li><b>PyTorch</b> — Diffusers · Accelerate · W&amp;B · multi-GPU bf16</li><li><b>Diffusion &amp; flow matching</b> — DiT, AdaLN, FLUX, Sana, samplers</li><li><b>Remote sensing</b> — Sentinel-2, fMoW, xView, hyperspectral</li><li><b>Computer vision</b> — detection, denoising, super-resolution</li><li><b>Reinforcement learning</b> — REINFORCE, policy gradients</li><li><b>LLM agents</b> — retrieval, schema-driven extraction</li><li><b>Speech synthesis</b> — VITS, YourTTS, speaker encoders</li><li><b>Evaluation</b> — controllability probes, seeds, error bars</li><li><b>Python · C++ · MATLAB</b> — and Verilog, when provoked</li><li><b>Explaining things</b> — guides, reports, visualisations</li></ul>
+<h2>FAQ</h2><h3>What is Digvijay looking for?</h3><p>ML research and engineering roles — generative models, computer vision, remote sensing, and LLM tooling. Internships now; the dual degree finishes in 2027, so full-time roles from then.</p><h3>What is the strongest thing here?</h3><p>FlowSat, the BMVC 2026 first-author paper — and FlowSat-C, the thesis that followed it, because it shows the rarer skill: noticing that a model with great metrics was ignoring half its inputs, and proving why.</p><h3>Can he ship, or only publish?</h3><p>Both. The Zelite internship built an LLM automation platform that took multi-hour company research to under five minutes, and four projects here are live pages you can open right now — FlowSat with public weights, the RL report, the Hindi audio samples, the diffusion guide — with code for more.</p><h3>What does he train on?</h3><p>Multi-GPU PyTorch with Accelerate and bf16, on A100-class hardware — from a 0.6B Sana DiT fine-tuned for 125K steps to a 4B FLUX.2 backbone, over a 257K-image curated dataset.</p><h3>Why is this a streaming service?</h3><p>Because a portfolio should be something you want to browse, not something you have to read. Also: he likes films more than résumé templates. The % match is a real overlap score between what you pick in Tune results and each project — a sorting aid, not a verdict. Everything else is taken from the work itself.</p><h3>How do I reach him?</h3><p>Email is fastest: digvijaysingh.parihar@iitgn.ac.in. LinkedIn, GitHub and the résumé are one click away in the contact card below.</p>
+<!-- PRERENDER:END -->
+</div></noscript>
+  <!-- Billboard: the series is the person -->
+  <section class="hero" id="hero" aria-label="Featured">
     <div class="hero-art" id="heroArt"></div>
     <div class="hero-scrim"></div>
     <div class="hero-body">
-      <p class="hero-kicker" id="heroKicker"></p>
+      <p class="hero-kicker"><span class="series-d">D</span><span>SERIES</span></p>
       <h1 class="hero-title" id="heroTitle"></h1>
-      <p class="hero-meta" id="heroMeta"></p>
+      <p class="hero-top10" id="heroTop10"></p>
       <p class="hero-logline" id="heroLogline"></p>
       <div class="hero-actions">
-        <a class="btn-play" id="heroPlay" href="#" target="_blank" rel="noopener">▶ Play</a>
-        <button class="btn-info" id="heroInfo" type="button">ⓘ More info</button>
+        <button class="btn-play" id="heroPlay" type="button"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M6 4l15 8-15 8z" fill="currentColor"/></svg>Play trailer</button>
+        <button class="btn-info" id="heroInfo" type="button"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v6M12 7.2v.1" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>More info</button>
       </div>
+      <p class="hero-credits" id="heroCredits"></p>
+      <p class="hero-quick" id="heroQuick"></p>
     </div>
+    <div class="hero-side">
+      <button class="round-btn" id="heroCycle" type="button" aria-label="Next backdrop" title="Next backdrop">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <span class="maturity" id="heroRating">TV-ML</span>
+    </div>
+  </section>
+
+  <!-- Search results replace the rails while a query is active -->
+  <section class="search-results" id="searchResults" hidden aria-live="polite">
+    <p class="sr-head" id="srHead"></p>
+    <div class="sr-chips" id="srChips"></div>
+    <div class="sr-grid" id="srGrid"></div>
   </section>
 
   <div id="rows" class="rows"></div>
 
-  <section class="about" id="about">
-    <div class="about-grid">
-      <div>
-        <h2>About</h2>
-        <p id="aboutBlurb"></p>
-        <p class="about-more" id="aboutMore"></p>
+  <!-- Netflix-landing style call to action -->
+  <section class="cta" id="contact" aria-labelledby="ctaTitle">
+    <div class="cta-inner">
+      <h2 id="ctaTitle">Unlimited research, shipping and curiosity.</h2>
+      <p class="cta-sub" id="ctaSub"></p>
+      <div class="cta-btns">
+        <a class="btn-cta" id="ctaMail" href="#">Email Digvijay <span aria-hidden="true">›</span></a>
+        <button class="btn-cta-ghost" id="ctaCopy" type="button">Copy email</button>
+        <a class="btn-cta-ghost" id="ctaCv" href="#" target="_blank" rel="noopener">Résumé</a>
       </div>
-      <aside class="contact-card">
-        <h3>Get in touch</h3>
-        <p class="contact-sub">Open to jobs and internships.</p>
-        <ul class="contact-list" id="contact"></ul>
-      </aside>
+      <ul class="contact-row" id="contactRow"></ul>
     </div>
+  </section>
+
+  <section class="faq" aria-labelledby="faqTitle">
+    <h2 id="faqTitle">Frequently asked questions</h2>
+    <div class="faq-list" id="faqList"></div>
   </section>
 </main>
 
 <footer class="foot">
-  <p id="footName"></p>
-  <p class="foot-note">
-    Built from scratch — no framework, no build step. A Netflix-inspired layout, not affiliated
-    with or endorsed by Netflix. <a href="https://github.com/dsp81" target="_blank" rel="noopener">Source</a>
-  </p>
+  <div class="foot-inner">
+    <p class="foot-q">Questions? Email <a id="footEmail" href="#"></a></p>
+    <ul class="foot-links" id="footLinks"></ul>
+    <p class="foot-note">
+      Built from scratch — no framework, no build step. A Netflix-inspired layout, not affiliated
+      with or endorsed by Netflix; no Netflix assets or code are used. The imagery is the projects'
+      own output — model samples, spectrograms, figures — apart from the illustrated title cards for GeoDiff, the Zelite agent and the node editor. The % match is an overlap score between what you pick in Tune results and each project — a sorting aid, not a verdict. <a href="https://github.com/dsp81/dsp81.github.io" target="_blank" rel="noopener">Source</a>
+    </p>
+    <p class="foot-name" id="footName"></p>
+  </div>
 </footer>
 
-<!-- What are you looking for: a short questionnaire that reorders the whole page -->
+<!-- Mobile tab bar -->
+<nav class="tabbar" aria-label="Quick actions">
+  <a href="#top" data-tab="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" fill="currentColor"/></svg>Home</a>
+  <button type="button" data-tab="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Search</button>
+  <button type="button" data-tab="trailer" class="tab-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4l14 8-14 8z" fill="currentColor"/></svg>Trailer</button>
+  <a href="#" id="tabResume" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v15H6z M14 2v6h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Résumé</a>
+  <a href="#contact" data-tab="contact"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v14H3z M3 6l9 7 9-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Contact</a>
+</nav>
+
+<!-- Hover preview (desktop): one floating card, positioned over whichever card is hovered -->
+<div class="preview" id="preview" hidden></div>
+
+<!-- Tune results -->
 <div class="quiz" id="quiz" hidden>
   <div class="quiz-card" role="dialog" aria-modal="true" aria-labelledby="quizTitle">
     <p class="quiz-kicker">Tailor this page</p>
-    <h2 id="quizTitle">What are you looking for?</h2>
-    <p class="quiz-sub">Pick as many as you like. Everything below gets re-scored and
+    <h2 id="quizTitle">What are you hiring for?</h2>
+    <p class="quiz-sub">Pick as many as you like. Every match score is recomputed and every rail
        re-ordered around your answers — nothing is hidden.</p>
     <ul class="traits" id="traitList"></ul>
     <div class="quiz-actions">
       <button class="btn-play" id="quizSubmit" type="button">Show me</button>
-      <button class="btn-info" id="quizSkip" type="button">Skip — show everything</button>
+      <button class="btn-info" id="quizSkip" type="button">Reset</button>
       <span class="quiz-count" id="traitCount"></span>
     </div>
   </div>
 </div>
 
-<!-- Title detail modal -->
+<!-- Detail modal (titles and the series share it) -->
 <div class="modal" id="modal" hidden>
-  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="mTitle">
-    <button class="modal-close" id="modalClose" aria-label="Close">×</button>
-    <div class="modal-art" id="mArt">
-      <div class="modal-art-scrim"></div>
-      <div class="modal-head">
-        <h2 id="mTitle"></h2>
-        <p id="mSub"></p>
-        <div class="modal-actions" id="mActions"></div>
-      </div>
-    </div>
-    <div class="modal-body">
-      <div class="modal-main">
-        <p class="modal-meta" id="mMeta"></p>
-        <p class="modal-synopsis" id="mSynopsis"></p>
-        <div class="stats" id="mStats"></div>
-        <h3 class="modal-h">Episodes</h3>
-        <ol class="episodes" id="mEpisodes"></ol>
-        <div id="mGalleryWrap" hidden>
-          <h3 class="modal-h">Recent samples</h3>
-          <div class="gallery" id="mGallery"></div>
-        </div>
-      </div>
-      <div class="modal-side">
-        <h3 class="modal-h">Stack &amp; themes</h3>
-        <ul class="tagcloud" id="mTags"></ul>
-        <h3 class="modal-h">More like this</h3>
-        <div class="related" id="mRelated"></div>
-      </div>
+  <div class="modal-card" id="modalCard" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <button class="modal-close" id="modalClose" aria-label="Close">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    </button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<!-- Trailer player -->
+<div class="player" id="player" hidden role="dialog" aria-modal="true" aria-label="Trailer">
+  <div class="player-stage" id="playerStage"></div>
+  <div class="player-top">
+    <button class="player-back" id="playerBack" type="button" aria-label="Back to browse">
+      <svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M15 5l-7 7 7 7M8 12h13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+  <div class="player-controls">
+    <div class="scrub" id="scrub"><div class="scrub-fill" id="scrubFill"></div><div class="scrub-ticks" id="scrubTicks"></div></div>
+    <div class="player-row">
+      <button type="button" id="pPlay" aria-label="Pause"></button>
+      <button type="button" id="pBack" aria-label="Previous shot">
+        <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path d="M11 5L4 12l7 7M20 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+      </button>
+      <button type="button" id="pFwd" aria-label="Next shot">
+        <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path d="M13 5l7 7-7 7M4 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+      </button>
+      <span class="player-time" id="pTime">0:00 / 0:00</span>
+      <span class="player-title" id="pTitle"><b>Digvijay Singh Parihar</b> Official Trailer</span>
+      <button type="button" class="player-next" id="pNext">Watch this <span aria-hidden="true">▸</span></button>
     </div>
   </div>
 </div>
 
-<script src="data.js?v=20260917-191029"></script>
-<script src="app.js?v=20260917-191029"></script>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+
+<script src="data.js?v=20260926-134051"></script>
+<script src="app.js?v=20260926-134051"></script>
 </body>
 </html>

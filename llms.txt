@@ -1,0 +1,180 @@
+# Digvijay Singh Parihar
+
+> Dual degree M.Tech CSE + B.Tech EE, IIT Gandhinagar. I build generative and decision-making models for satellite imagery — and I care about what the numbers actually say afterwards. First author at BMVC 2026, currently writing a master's thesis on controllable foundation models for Earth observation.
+
+Open to ML research & engineering roles — internships now, full-time from 2027.
+
+- Email: digvijaysingh.parihar@iitgn.ac.in
+- LinkedIn: https://www.linkedin.com/in/digvijay-singh-parihar-b73536259/
+- GitHub: https://github.com/dsp81
+- Résumé: https://drive.google.com/file/d/1XvmNF9L68KHgZl6YI5KaVUmrREIg5Exw/view?usp=drive_link
+- Site: https://dsp81.github.io/
+
+## Projects
+
+### FlowSat (2026, BMVC 2026)
+
+*Flow-matching diffusion transformers for satellite imagery.* A flow-matching diffusion transformer built on Sana-0.6B that conditions on seven metadata fields — longitude, latitude, month, day, year, ground sample distance, cloud cover — by encoding each one on its own geometry (a sphere for coordinates, a circle for dates) and grafting it into the pretrained AdaLN modulation through zero-initialised layers, so at step zero the network is byte-identical to the base model and nothing is unlearned on the way in. Flow matching replaces denoising, which is what buys the 20-step sampling. The project page reports both the submitted FID (31.10) and the released checkpoint's (28.74), with the exact protocol to reproduce either; the weights are public on Hugging Face. Measured afterwards, the metadata control is uneven: GSD is strong, cloud and season are weak, and geography is close to null. The dial below shows it, and FlowSat-C is the fix.
+
+- **FID 28.74** — released checkpoint · 31.10 as submitted
+- **CLIP 0.3019** — prompt fidelity · 10k FMoW test samples
+- **20 steps** — vs 100 for DiffusionSat (FID 35.27)
+- **11× fewer** — metadata-encoder parameters than SatCLIP
+- Credits: Digvijay Singh Parihar (first author), Rishabh Mondal, Nipun Batra · Sustainability Lab, IIT Gandhinagar
+- Open the project page: https://dsp81.github.io/flowsat-satellite-image/
+- Code: https://github.com/dsp81/flowsat-satellite-image
+- Weights: https://huggingface.co/Djisgod/flowsat-fmow-512
+
+### FlowSat-C (2026 —, Master's thesis)
+
+*Making a 4B generative model actually listen to metadata.* Metadata conditioning rebuilt on FLUX.2-klein-base-4B. FlowSat — the BMVC model — accepted latitude, longitude, GSD, cloud and date but was barely controllable by most of them; measured ordering was GSD > cloud > season > geography (≈ null). Two causes, both structural: rich captions already described season and biome, so the model used text (redundancy); and metadata entered as one global vector in the shared AdaLN modulation, which cannot express a spatially varying effect (bandwidth). The rebuild keeps the zero-initialised graft for global effects, gives metadata its own tokens in joint attention for spatial ones, and strips captions of anything the metadata already says. A third, spectral pathway was built, then measured against the data with pre-registered criteria — and removed. Training data: 257,248 curated FMoW images from 57,294 locations in 198 countries. It is training now; controllability results will be posted when they are validated.
+
+- **FLUX.2-klein** — 4B flow-matching backbone
+- **257,248** — curated images · 198 countries
+- **2 pathways** — graft + tokens · a third was measured and cut
+- **GSD > cloud > season > geo ≈ 0** — measured control ordering in FlowSat
+- **Results pending** — training now · per-field probes built
+- Credits: Digvijay Singh Parihar · advised by Prof. Nipun Batra
+- Sustainability Lab: https://sustainability-lab.github.io/
+
+### Poverty Mapping by RL (2025, Reproduction)
+
+*The imagery wasn't worth buying — and seven seeds say so.* A from-scratch reimplementation of Ayush et al. (AAAI 2021): a REINFORCE policy sees only free Sentinel-2 imagery, picks which of 256 high-resolution subtiles to buy, a YOLOv3 fine-tuned from COCO onto xView counts what is in them, and a gradient-boosted regressor predicts cluster consumption. Seven seeds, held-out splits, every number published.
+
+- **70.7%** — of all detected objects recovered
+- **13.7%** — of the imagery actually bought
+- **0.449** — detector mAP@50 on xView
+- **r² 0.326 vs 0.314** — free imagery alone vs with purchases (±0.078 across 7 seeds)
+- Credits: Digvijay Singh Parihar
+- Open the report: https://dsp81.github.io/RL---Adaptive-Tile-Selection/
+- Code: https://github.com/dsp81/RL---Adaptive-Tile-Selection
+
+### YourTTS Hindi (2025, MOS 4.44)
+
+*Zero-shot voice cloning that speaks Devanagari.* YourTTS (VITS) rebuilt for Hindi: the 165-symbol vocabulary was replaced with a 190-symbol Devanagari set, phoneme processing swapped for graphemes, the language embedding disabled for single-language conditioning, and the whole thing fine-tuned on IndicTTS-Hindi. The 512-d speaker encoder stays frozen, which is what keeps zero-shot cloning alive after the switch.
+
+- **4.44 / 5** — naturalness MOS · 48 ratings, 8 listeners
+- **4.75 / 5** — speaker similarity (SIM-MOS)
+- **165 → 190** — symbols, rebuilt for Devanagari
+- **11.8k** — IndicTTS-Hindi training samples
+- Credits: NLP course group project, IIT Gandhinagar
+- Hear the samples: https://dsp81.github.io/YourTTS-Hindi/
+- Code: https://github.com/dsp81/YourTTS-Hindi
+
+### Diffusion Models, Explained (2026, Interactive)
+
+*Removing noise to make an image.* A long-form interactive guide to diffusion models, from why noise is the right thing to destroy, through the forward and reverse processes, the loss derivation, a single timestep in full, why the noise is Gaussian, and where flow matching goes next. Draggable noise schedules, playable sampling trajectories, and a conversational voice that assumes curiosity rather than a measure-theory course.
+
+- **8 chapters** — problem → derivation → flow matching
+- **Interactive** — draggable schedules, playable sampling
+- **From scratch** — written, illustrated and built solo
+- Credits: Written, illustrated and built by Digvijay Singh Parihar
+- Read the guide: https://diffusionguidedj.netlify.app/
+
+### Spectral Diffusion (2025, Research poster)
+
+*Unmixing priors for hyperspectral image denoising.* Built on Diff-Unmix (CVPR 2024): the noisy hyperspectral cube is decomposed into spectral endmembers (pure material spectra) and abundance maps, and a DDPM-based reverse process denoises the abundances while the spectra stay intact. The additions: SVD thresholding on the abundance maps to strip small singular values before diffusion, a spectral transformer block for band-wise self-attention, and a multi-loss objective mixing MSE with a VGG16 perceptual term. Self-supervised — it never needs a clean ground truth.
+
+- **+3.6 dB** — PSNR over the Diff-Unmix baseline, as reported on the poster
+- **0.925 → 0.947** — SSIM, baseline → ours
+- **0 clean refs** — self-supervised end to end
+- Credits: Digvijay Singh Parihar · Akbar Ali · advised by Prof. Shanmuganathan Raman
+- Code: https://github.com/dsp81/Denoising-Hyperspectral-Imagery
+
+### LLM Research Agent (2025, Internship)
+
+*Software engineering intern · Zelite Solutions.* An end-to-end automation platform at a Microsoft Solutions Partner that orchestrates web retrieval, LLM inference and structured extraction. The agent is modular: search depth, query strategy and context budget are all adjustable, output is schema-driven JSON, and local models (DeepSeek-R1, Mistral-7B, Phi-3) were benchmarked head to head against cloud OpenAI models.
+
+- **Hours → minutes** — under five, end to end
+- **4+ models** — local and cloud, benchmarked
+- **Schema-driven** — JSON out, not prose
+- Credits: Digvijay Singh Parihar · Zelite Solutions (Microsoft Solutions Partner)
+
+### Node Graph Image Editor (2025, Pilot)
+
+*C++ · Qt · OpenCV — image processing as a wired graph.* A desktop image-manipulation tool in C++ with Qt for the canvas and OpenCV for the operations. Each node is an atomic operation with its own parameters; connections compile into a directed acyclic graph that is topologically sorted and executed. The pilot ships the CMake build, the Qt canvas and the node infrastructure; the execution engine is the next episode.
+
+- **C++ · Qt** — custom canvas and node rendering
+- **DAG engine** — topological execution of OpenCV ops
+- **CMake** — cross-platform build
+- Credits: Digvijay Singh Parihar
+- Code: https://github.com/dsp81/Node-based-image-processor
+
+### GeoDiff (Coming soon, In development)
+
+*Diffusion that draws a city's roads from its terrain.* Conditional diffusion for spatially embedded road-network graphs, conditioned on continuous geographic fields. Two stages: one diffuses node positions, the other diffuses the adjacency. The point is what baselines cannot do — complete a half-drawn network, and answer what-if questions by perturbing the terrain and resampling.
+
+- Credits: Digvijay Singh Parihar
+
+## Experience
+
+### Student Researcher — Master's thesis — Sustainability Lab, IIT Gandhinagar (Jan 2026 — present)
+
+- Leading thesis work on controllable, metadata-conditioned generative models for Earth observation on a 4B-parameter FLUX.2 backbone.
+- Designing a controllability benchmark that quantifies per-field causal effects instead of trusting FID.
+- Extending the flow-matching transformer to image-to-image: temporal inpainting, temporal generation, GSD-controlled super-resolution and change-guided generation.
+
+### Software Engineering Intern — Zelite Solutions (Microsoft Solutions Partner) (May — June 2025)
+
+- Designed and built an end-to-end AI automation platform orchestrating web retrieval, LLM inference and structured information extraction.
+- Engineered a modular agent with adjustable search depth, query strategies and context budgets, token-efficient prompting and schema-driven JSON generation.
+- Benchmarked local models (DeepSeek-R1, Mistral-7B, Phi-3) against cloud OpenAI models, taking multi-hour company research workflows to under five minutes.
+
+### Research Project — Hyperspectral denoising — CVIG Lab, IIT Gandhinagar (2025)
+
+- Extended Diff-Unmix (CVPR 2024) with SVD thresholding, a spectral transformer unit and a perceptual multi-loss.
+- Improved on the Diff-Unmix baseline by +3.6 dB PSNR and SSIM 0.925 → 0.947 (as reported on the project poster), fully self-supervised.
+
+## Education
+
+- Dual degree — M.Tech CSE + B.Tech EE, Indian Institute of Technology Gandhinagar (2022 — 2027) — CPI 8.07
+- Class XII (CBSE), Delhi Public School, Bopal (—) — 95.2%
+- Class X (CBSE), Delhi Public School, Bopal (—) — 97%
+
+## Honours
+
+- **BMVC 2026** — First-author paper accepted
+- **Dean's List** — IIT Gandhinagar — semesters 1 and 2, for academic performance (SPI 8.5+)
+- **Codeforces Specialist** — Competitive programming in C++
+- **Student Guide** — Selected to mentor incoming first-years, one of 40 guides
+- **Captain, CCL'25 champions** — Led Mighty Mambas to the title
+- **Inter-IIT Sports Meet** — Cricket — quarter-finalists in the 56th and 57th editions
+
+## Skills
+
+- **PyTorch** — Diffusers · Accelerate · W&B · multi-GPU bf16
+- **Diffusion & flow matching** — DiT, AdaLN, FLUX, Sana, samplers
+- **Remote sensing** — Sentinel-2, fMoW, xView, hyperspectral
+- **Computer vision** — detection, denoising, super-resolution
+- **Reinforcement learning** — REINFORCE, policy gradients
+- **LLM agents** — retrieval, schema-driven extraction
+- **Speech synthesis** — VITS, YourTTS, speaker encoders
+- **Evaluation** — controllability probes, seeds, error bars
+- **Python · C++ · MATLAB** — and Verilog, when provoked
+- **Explaining things** — guides, reports, visualisations
+
+## FAQ
+
+**What is Digvijay looking for?**
+
+ML research and engineering roles — generative models, computer vision, remote sensing, and LLM tooling. Internships now; the dual degree finishes in 2027, so full-time roles from then.
+
+**What is the strongest thing here?**
+
+FlowSat, the BMVC 2026 first-author paper — and FlowSat-C, the thesis that followed it, because it shows the rarer skill: noticing that a model with great metrics was ignoring half its inputs, and proving why.
+
+**Can he ship, or only publish?**
+
+Both. The Zelite internship built an LLM automation platform that took multi-hour company research to under five minutes, and four projects here are live pages you can open right now — FlowSat with public weights, the RL report, the Hindi audio samples, the diffusion guide — with code for more.
+
+**What does he train on?**
+
+Multi-GPU PyTorch with Accelerate and bf16, on A100-class hardware — from a 0.6B Sana DiT fine-tuned for 125K steps to a 4B FLUX.2 backbone, over a 257K-image curated dataset.
+
+**Why is this a streaming service?**
+
+Because a portfolio should be something you want to browse, not something you have to read. Also: he likes films more than résumé templates. The % match is a real overlap score between what you pick in Tune results and each project — a sorting aid, not a verdict. Everything else is taken from the work itself.
+
+**How do I reach him?**
+
+Email is fastest: digvijaysingh.parihar@iitgn.ac.in. LinkedIn, GitHub and the résumé are one click away in the contact card below.
