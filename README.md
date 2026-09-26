@@ -38,8 +38,8 @@ replaces the monogram in the cast list.
 - `?p=recruiter` · `?p=researcher` · `?p=engineer` · `?p=browsing` — open a specific cut,
   skipping the profile picker. Handy for sending someone a tailored link.
 - `#trailer` — straight into the trailer. `#about` — the series page (seasons, cast).
-- `#flowsat`, `#flowsat-c`, `#povrl`, `#yourtts`, `#diffusion-guide`, `#hsi`, `#zelite`,
-  `#node-editor`, `#geodiff` — open a title's detail view.
+- `#flowsat`, `#flowsat-c`, `#povrl`, `#yourtts`, `#diffusion-guide`, `#hsi`, `#zelite`
+  — open a title's detail view.
 - `?q=diffusion` — open with a search.
 - `?intro=1` replays the opening titles, `?intro=0` skips them.
 

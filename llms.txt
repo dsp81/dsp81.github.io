@@ -90,22 +90,6 @@ Open to ML research & engineering roles — internships now, full-time from 2027
 - **Schema-driven** — JSON out, not prose
 - Credits: Digvijay Singh Parihar · Zelite Solutions (Microsoft Solutions Partner)
 
-### Node Graph Image Editor (2025, Pilot)
-
-*C++ · Qt · OpenCV — image processing as a wired graph.* A desktop image-manipulation tool in C++ with Qt for the canvas and OpenCV for the operations. Each node is an atomic operation with its own parameters; connections compile into a directed acyclic graph that is topologically sorted and executed. The pilot ships the CMake build, the Qt canvas and the node infrastructure; the execution engine is the next episode.
-
-- **C++ · Qt** — custom canvas and node rendering
-- **DAG engine** — topological execution of OpenCV ops
-- **CMake** — cross-platform build
-- Credits: Digvijay Singh Parihar
-- Code: https://github.com/dsp81/Node-based-image-processor
-
-### GeoDiff (Coming soon, In development)
-
-*Diffusion that draws a city's roads from its terrain.* Conditional diffusion for spatially embedded road-network graphs, conditioned on continuous geographic fields. Two stages: one diffuses node positions, the other diffuses the adjacency. The point is what baselines cannot do — complete a half-drawn network, and answer what-if questions by perturbing the terrain and resampling.
-
-- Credits: Digvijay Singh Parihar
-
 ## Experience
 
 ### Student Researcher — Master's thesis — Sustainability Lab, IIT Gandhinagar (Jan 2026 — present)

@@ -786,7 +786,7 @@ function openModal(id) {
       <div class="sec-head"><h3>Episodes</h3><span>${esc(t.title)}</span></div>
       ${episodeList(t.episodes || [], t)}
     </div>
-    ${(t.gallery || []).length ? `<div class="modal-sec"><div class="sec-head"><h3>Stills</h3><span>generated or measured, not stock</span></div>
+    ${(t.gallery || []).length ? `<div class="modal-sec"><div class="sec-head"><h3>Stills</h3><span>${esc(t.galleryNote || "generated or measured, not stock")}</span></div>
       <div class="gallery">${t.gallery.map(([src, cap]) =>
         `<figure><img src="${src}" alt="${esc(cap)}" loading="lazy"><figcaption>${esc(cap)}</figcaption></figure>`).join("")}</div></div>` : ""}
     <div class="modal-sec">

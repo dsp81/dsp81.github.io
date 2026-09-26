@@ -35,8 +35,8 @@ const SERIES = {
   genres: ["Generative AI", "Earth Observation", "Research that ships"],
   moods: ["Investigative", "Technical", "Curious"],
   backdrops: [
+    "assets/art/hero_flowsat_grid.jpg",
     "assets/art/hero_ports.jpg",
-    "assets/art/hero_grid.jpg",
     "assets/art/hero_sweeps.jpg",
   ],
   logline:
@@ -58,12 +58,13 @@ const TRAILER = [
     line: "257,248 satellite images.",
     sub: "198 countries, 57,294 distinct places, one curated training set. The job: teach a model what the planet looks like.",
     title: "flowsat-c" },
-  { bg: "assets/art/hero_grid.jpg", kicker: "FlowSat",
+  { bg: "assets/art/hero_flowsat_grid.jpg", kicker: "FlowSat",
+    frames: ["assets/flowsat/stadium_c.jpg", "assets/flowsat/farm_a.jpg", "assets/flowsat/port_b.jpg"],
     line: "Name a place, a date, a resolution.",
     sub: "It paints the satellite image that should be there.",
     title: "flowsat" },
-  { bg: "assets/art/hero_flowsat.jpg", kicker: "BMVC 2026 · first author",
-    frames: ["assets/art/flowsat_gallery_01.jpg", "assets/art/fs_02.jpg", "assets/art/flowsat_compare_a.jpg"],
+  { bg: "assets/art/hero_flowsat_grid.jpg", kicker: "BMVC 2026 · first author",
+    frames: ["assets/flowsat/air_a.jpg", "assets/flowsat/stadium_a.jpg", "assets/flowsat/farm_c.jpg"],
     line: "20 steps. The baseline needs 100.",
     sub: "FID 28.74 on the released checkpoint (31.10 as submitted) against DiffusionSat's 35.27. Weights are public.",
     title: "flowsat" },
@@ -108,16 +109,16 @@ const TITLES = [
     badge: "BMVC 2026",
     match: 98,
     duration: "Published · first author",
-    tags: ["Generative AI", "Diffusion & Flow Matching", "Remote Sensing", "PyTorch"],
+    tags: ["Generative AI", "Diffusion & Flow Matching", "Remote Sensing", "Computer Vision", "PyTorch"],
     genres: ["Generative AI", "Remote Sensing", "Peer-reviewed"],
     moods: ["Elegant", "Fast", "Geometric"],
     contains: "spherical coordinates, zero-initialised layers, 20-step sampling",
     cast: "Digvijay Singh Parihar (first author), Rishabh Mondal, Nipun Batra · Sustainability Lab, IIT Gandhinagar",
     dial: true,
     bibtex: "@inproceedings{parihar2026flowsat,\n  title     = {FlowSat: Flow-Matching Diffusion Transformers with Metadata\n               Conditioning for Satellite Image Generation},\n  author    = {Parihar, Digvijay Singh and Mondal, Rishabh and Batra, Nipun},\n  booktitle = {British Machine Vision Conference (BMVC)},\n  year      = {2026}\n}",
-    art: "assets/art/flowsat_gallery_05.jpg",
-    poster: "assets/art/flowsat_gallery_01.jpg",
-    backdrop: "assets/art/hero_grid.jpg",
+    art: "assets/art/flowsat_card.jpg",
+    poster: "assets/flowsat/stadium_c.jpg",
+    backdrop: "assets/art/hero_flowsat_grid.jpg",
     logline:
       "Give it a caption plus where, when and at what resolution — it paints the satellite image. " +
       "Resolution it obeys reliably; season, cloud and place far less, which became the thesis.",
@@ -139,11 +140,20 @@ const TITLES = [
       ["11× fewer", "metadata-encoder parameters than SatCLIP"],
     ],
     episodes: [
-      ["Geometry-aware metadata", "Coordinates live on a sphere and dates on a circle; encode them that way instead of as bare floats.", "assets/art/flowsat_gallery_01.jpg"],
-      ["Zero-initialised grafts", "New conditioning enters the pretrained AdaLN modulation pathway at exactly zero, so the first training step cannot damage the base model.", "assets/art/fs_02.jpg"],
-      ["Flow matching, not denoising", "A straight-line probability path gets usable samples in 20 steps rather than 100. 125K optimiser steps, bf16, multi-GPU with Accelerate.", "assets/art/flowsat_gallery_07.jpg"],
-      ["It generalises", "Trained on FMoW-RGB, still coherent zero-shot on the out-of-domain RSICD benchmark.", "assets/art/flowsat_gallery_03.jpg"],
+      ["Geometry-aware metadata", "Coordinates live on a sphere and dates on a circle; encode them that way instead of as bare floats.", "assets/flowsat/port_a.jpg"],
+      ["Zero-initialised grafts", "New conditioning enters the pretrained AdaLN modulation pathway at exactly zero, so the first training step cannot damage the base model.", "assets/flowsat/stadium_b.jpg"],
+      ["Flow matching, not denoising", "A straight-line probability path gets usable samples in 20 steps rather than 100. 125K optimiser steps, bf16, multi-GPU with Accelerate.", "assets/flowsat/farm_b.jpg"],
+      ["It generalises", "Trained on FMoW-RGB, still coherent zero-shot on the out-of-domain RSICD benchmark.", "assets/flowsat/air_b.jpg"],
     ],
+    gallery: [
+      ["assets/flowsat/stadium_c.jpg", "“A large oval sports stadium seen from directly overhead…” — 512 px, 20 Euler steps."],
+      ["assets/flowsat/port_b.jpg", "“A working container port on a calm dark harbour…” — rows of containers in reds and blues."],
+      ["assets/flowsat/farm_a.jpg", "“Irrigated farmland at the height of summer…” — the patchwork, hedgerows and a farm building."],
+      ["assets/flowsat/air_a.jpg", "“A regional airport in clear midday light…” — runway markings and hangars."],
+      ["assets/flowsat/stadium_e.jpg", "Same stadium prompt, another seed: layout varies, the category holds."],
+      ["assets/flowsat/port_d.jpg", "Same port prompt, another seed: quays, cranes and a pier from above."],
+    ],
+    galleryNote: "FlowSat's own samples from the released 125K checkpoint — teaser candidates for the paper",
     links: [
       ["Open the project page", "https://dsp81.github.io/flowsat-satellite-image/", "play"],
       ["Code", "https://github.com/dsp81/flowsat-satellite-image", "code"],
@@ -163,13 +173,13 @@ const TITLES = [
     progress: 45,
     duration: "Master's thesis · Sustainability Lab",
     tags: ["Generative AI", "Diffusion & Flow Matching", "Remote Sensing", "Research",
-           "Interpretability"],
+           "Interpretability", "Evaluation"],
     genres: ["Generative AI", "Interpretability", "Thesis"],
     moods: ["Investigative", "Ambitious", "Self-critical"],
     contains: "spherical harmonics, a model caught ignoring its inputs, one deleted pathway",
     cast: "Digvijay Singh Parihar · advised by Prof. Nipun Batra",
-    art: "assets/art/flowsatc_geo.jpg",
-    poster: "assets/art/flowsatc_season.jpg",
+    art: "assets/art/flowsatc_card.jpg",
+    poster: "assets/art/flowsatc_poster.jpg",
     backdrop: "assets/art/hero_sweeps.jpg",
     dial: true,
     logline:
@@ -220,7 +230,7 @@ const TITLES = [
       ["assets/art/flowsatc_season.jpg", "Season sweep on fixed scenes and seeds."],
     ],
     links: [["Sustainability Lab", "https://sustainability-lab.github.io/", "code"]],
-    related: ["flowsat", "geodiff", "diffusion-guide"],
+    related: ["flowsat", "diffusion-guide", "povrl"],
   },
   {
     id: "povrl",
@@ -231,7 +241,7 @@ const TITLES = [
     rating: "Reproduction",
     match: 95,
     duration: "AAAI 2021 reproduction · 318 Uganda clusters",
-    tags: ["Reinforcement Learning", "Remote Sensing", "Object Detection", "Honest Results"],
+    tags: ["Reinforcement Learning", "Remote Sensing", "Computer Vision", "Object Detection", "Evaluation"],
     genres: ["Reinforcement Learning", "Remote Sensing", "AI for social good"],
     moods: ["Frugal", "Rigorous", "Candid"],
     contains: "policy gradients, seven random seeds, a negative result reported anyway",
@@ -436,86 +446,8 @@ const TITLES = [
     ],
     links: [],
     noLinks: true,
-    related: ["yourtts", "node-editor"],
+    related: ["yourtts", "diffusion-guide"],
     relatedText: "Client work, so no public link — the details are on the résumé.",
-  },
-  {
-    id: "node-editor",
-    kind: "pilot",
-    title: "Node Graph Image Editor",
-    sub: "C++ · Qt · OpenCV — image processing as a wired graph",
-    year: "2025",
-    rating: "Pilot",
-    badge: "Pilot",
-    match: 86,
-    duration: "Side project · C++17",
-    tags: ["C++", "Qt", "OpenCV", "Graph execution"],
-    genres: ["Systems", "Tooling", "Computer Vision"],
-    moods: ["Hands-on", "Architectural", "Low-level"],
-    contains: "a DAG, a topological sort, pointers",
-    cast: "Digvijay Singh Parihar",
-    art: "assets/art/node_card.jpg",
-    poster: "assets/art/node_card.jpg",
-    backdrop: "assets/art/node_card.jpg",
-    logline:
-      "Instead of filter → undo → retry, wire blur, threshold and blend nodes into a graph and " +
-      "let a DAG engine evaluate it.",
-    synopsis:
-      "A desktop image-manipulation tool in C++ with Qt for the canvas and OpenCV for the " +
-      "operations. Each node is an atomic operation with its own parameters; connections compile " +
-      "into a directed acyclic graph that is topologically sorted and executed. The pilot ships " +
-      "the CMake build, the Qt canvas and the node infrastructure; the execution engine is the " +
-      "next episode.",
-    stats: [
-      ["C++ · Qt", "custom canvas and node rendering"],
-      ["DAG engine", "topological execution of OpenCV ops"],
-      ["CMake", "cross-platform build"],
-    ],
-    episodes: [
-      ["Setup", "CMake build, Qt window, custom canvas and event loop."],
-      ["Node infrastructure", "Base class and registry, pins, drag interaction."],
-      ["Operations", "Grayscale, blur, sharpen, edges — each a node with sliders."],
-      ["Execution engine", "Parse the wiring into a DAG, sort it, run it."],
-    ],
-    links: [["Code", "https://github.com/dsp81/Node-based-image-processor", "play"]],
-    related: ["zelite", "hsi"],
-  },
-  {
-    id: "geodiff",
-    kind: "coming",
-    title: "GeoDiff",
-    sub: "Diffusion that draws a city's roads from its terrain",
-    year: "Coming soon",
-    rating: "In development",
-    badge: "Coming soon",
-    match: 94,
-    progress: 20,
-    duration: "Research · in development",
-    tags: ["Diffusion", "Graph Generation", "Geospatial"],
-    genres: ["Generative AI", "Graphs", "Geospatial"],
-    moods: ["Ambitious", "Spatial", "Early"],
-    contains: "graph diffusion, elevation fields, what-if generation",
-    cast: "Digvijay Singh Parihar",
-    art: "assets/art/geodiff_roads.jpg",
-    poster: "assets/art/geodiff_roads.jpg",
-    backdrop: "assets/art/geodiff_roads.jpg",
-    logline:
-      "Give it elevation, water and population. It draws the road network — and redraws it " +
-      "when you move the river.",
-    synopsis:
-      "Conditional diffusion for spatially embedded road-network graphs, conditioned on " +
-      "continuous geographic fields. Two stages: one diffuses node positions, the other diffuses " +
-      "the adjacency. The point is what baselines cannot do — complete a half-drawn network, and " +
-      "answer what-if questions by perturbing the terrain and resampling.",
-    stats: [],
-    episodes: [
-      ["Field binding", "First gate: prove the model actually responds to the terrain before scaling anything."],
-      ["Real cities", "Then real road networks and elevation data."],
-    ],
-    links: [],
-    noLinks: true,
-    related: ["flowsat-c", "flowsat"],
-    relatedText: "Early-stage research. Ask about it in an interview.",
   },
 ];
 
@@ -552,8 +484,6 @@ const TRAIT_MAP = {
   "hsi":             { diffusion: 0.9, vision: 1.0, "remote-sensing": 0.7, generative: 0.6,
                        research: 0.6, evaluation: 0.4 },
   "zelite":          { agents: 1.0, software: 1.0, shipping: 1.0, speech: 0.3, evaluation: 0.5 },
-  "node-editor":     { software: 1.0, vision: 0.6, shipping: 0.3 },
-  "geodiff":         { generative: 0.9, diffusion: 0.9, research: 0.5, "remote-sensing": 0.5 },
 };
 
 /* ── the series, season by season ────────────────────────────────────────────── */
@@ -571,9 +501,8 @@ const SEASONS = [
   },
   {
     label: "Season 2", years: "2025", name: "The build-up",
-    blurb: "Speech, spectra, agents and policies — five different fields in one year, on purpose.",
+    blurb: "Speech, spectra, agents and policies — four different fields in one year, on purpose.",
     eps: [
-      ["Node Graph Image Editor", "Apr 2025", "A C++/Qt/OpenCV side project: image processing as a wired DAG.", "node-editor"],
       ["Zelite Solutions", "May – Jun 2025", "Ships an LLM research agent at a Microsoft Solutions Partner. Hours become minutes.", "zelite"],
       ["Spectral Diffusion", "Jun 2025", "Hyperspectral denoising with unmixing priors at CVIG, with Prof. Shanmuganathan Raman.", "hsi"],
       ["YourTTS Hindi", "2025", "Zero-shot voice cloning, taught Devanagari. MOS 4.44.", "yourtts"],
@@ -588,7 +517,6 @@ const SEASONS = [
       ["FlowSat", "2026", "Flow-matching transformers for satellite imagery, with Rishabh Mondal and Nipun Batra. Accepted at BMVC 2026, first author.", "flowsat"],
       ["Diffusion Models, Explained", "2026", "Eight interactive chapters, written and built solo.", "diffusion-guide"],
       ["FlowSat-C", "Jan 2026 —", "Master's thesis at the Sustainability Lab: controllable metadata conditioning on a 4B backbone.", "flowsat-c"],
-      ["GeoDiff", "Coming soon", "Diffusion over road-network graphs, conditioned on terrain.", "geodiff"],
     ],
   },
 ];
@@ -762,7 +690,7 @@ const SKILLS = [
   ["LLM agents", "retrieval, schema-driven extraction", "llm", "#6b3fb8"],
   ["Speech synthesis", "VITS, YourTTS, speaker encoders", "speech", "#1d8fb8"],
   ["Evaluation", "controllability probes, seeds, error bars", "evaluation", "#8a8a1d"],
-  ["Python · C++ · MATLAB", "and Verilog, when provoked", "c++", "#555566"],
+  ["Python · C++ · MATLAB", "and Verilog, when provoked", "code", "#555566"],
   ["Explaining things", "guides, reports, visualisations", "writing", "#b83a3a"],
 ];
 
@@ -789,42 +717,41 @@ const TRACKS = {
     pitch:
       "First author at BMVC 2026, an LLM automation platform built in industry, four live project " +
       "pages plus code and weights. If you watch one thing, make it the 45-second trailer.",
-    rows: ["top", "numbers", "experience", "continue", "skills", "vault", "academics", "cinema", "interests"],
+    rows: ["top", "numbers", "experience", "skills", "vault", "academics", "cinema", "interests"],
   },
   researcher: {
     label: "Researcher",
     pitch:
       "Flow-matching transformers for Earth observation, a controllability benchmark that does " +
       "not trust FID, and a reproduction that publishes its own negative result.",
-    rows: ["top", "numbers", "experience", "continue", "vault", "skills", "cinema", "academics", "interests"],
+    rows: ["top", "numbers", "experience", "vault", "skills", "cinema", "academics", "interests"],
   },
   engineer: {
     label: "Engineer",
     pitch:
       "Multi-GPU training over 257K images, an LLM research agent built in industry, and " +
       "four live project pages plus public code and weights.",
-    rows: ["top", "skills", "experience", "continue", "numbers", "vault", "academics", "interests", "cinema"],
+    rows: ["top", "skills", "experience", "numbers", "vault", "academics", "interests", "cinema"],
   },
   browsing: {
     label: "Just browsing",
     pitch:
       "Start with the trailer — then the diffusion guide, which explains the rest and has " +
       "things to drag.",
-    rows: ["top", "cinema", "numbers", "interests", "skills", "experience", "continue", "vault", "academics"],
+    rows: ["top", "cinema", "numbers", "interests", "skills", "experience", "vault", "academics"],
   },
 };
 
 
 const ROWS = {
   mylist:     { label: "My List", kind: "mylist" },
-  continue:   { label: "In production", ids: ["flowsat-c", "geodiff"], kind: "continue" },
   top:        { label: "Top 5 projects today", ids: ["flowsat", "flowsat-c", "povrl", "yourtts", "diffusion-guide"], kind: "top" },
   picks:      { label: "{picks}", kind: "picks" },
   numbers:    { label: "By the numbers", kind: "numbers" },
   experience: { label: "Experience", kind: "experience" },
   skills:     { label: "Browse by skill", kind: "skills",
                 note: "Pick one and the catalogue filters to the work that uses it." },
-  vault:      { label: "More from the vault", ids: ["hsi", "zelite", "node-editor", "diffusion-guide"] },
+  vault:      { label: "More from the vault", ids: ["hsi", "zelite", "diffusion-guide", "yourtts"] },
   academics:  { label: "Academics & honours", kind: "academics" },
   interests:  { label: "Off the clock", kind: "interests" },
   cinema:     { label: "Because you watched…", kind: "cinema",
